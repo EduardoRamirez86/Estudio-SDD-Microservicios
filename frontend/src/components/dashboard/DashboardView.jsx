@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { ConfirmDialog } from "../shared/ConfirmDialog";
 
-export function DashboardView({ libros = [], prestamos = [], onNav }) {
+export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }) {
   const { usuario } = useAuth();
   const esBibliotecario = usuario?.rol === "bibliotecario";
+  const [confirmDevolucion, setConfirmDevolucion] = useState(null);
 
   // KPIs Operativos de alta prioridad
   const totalTitulos   = libros.length;
@@ -45,39 +47,42 @@ export function DashboardView({ libros = [], prestamos = [], onNav }) {
           </button>
         </header>
 
-        {/* Tira de Métricas Lector */}
-        <section className="metrics-grid" aria-label="Indicadores de Custodia">
-          <div className="metric-cell">
-            <div className="metric-cell__header">
-              <span className="metric-cell__label">Préstamos Activos</span>
+        {/* Panel Unificado de KPIs Lector */}
+        <section className="kpi-strip-unified" aria-label="Indicadores de Custodia">
+          <div className="kpi-cell">
+            <div className="kpi-cell__label">Préstamos Activos</div>
+            <div className="kpi-cell__main">
+              <span className="kpi-cell__val">{misPrestamos.filter(p => p.estado === "Activo").length}</span>
             </div>
-            <div className="metric-cell__value">{misPrestamos.filter(p => p.estado === "Activo").length}</div>
-            <div className="metric-cell__footer">Material en su custodia</div>
+            <div className="kpi-cell__footer">Material en su custodia</div>
           </div>
-          <div className="metric-cell">
-            <div className="metric-cell__header">
-              <span className="metric-cell__label">Próximos a Vencer</span>
+
+          <div className="kpi-cell">
+            <div className="kpi-cell__label">Próximos a Vencer</div>
+            <div className="kpi-cell__main">
+              <span className={`kpi-cell__val${miVenceProxima > 0 ? " kpi-cell__val--danger" : ""}`}>
+                {miVenceProxima}
+              </span>
             </div>
-            <div className={`metric-cell__value${miVenceProxima > 0 ? " metric-cell__value--danger" : ""}`}>
-              {miVenceProxima}
-            </div>
-            <div className="metric-cell__footer">Vencimiento en ≤ 3 días</div>
+            <div className="kpi-cell__footer">Vencimiento en ≤ 3 días</div>
           </div>
-          <div className="metric-cell">
-            <div className="metric-cell__header">
-              <span className="metric-cell__label">Historial Devueltos</span>
+
+          <div className="kpi-cell">
+            <div className="kpi-cell__label">Historial Devueltos</div>
+            <div className="kpi-cell__main">
+              <span className="kpi-cell__val">{misPrestamos.filter(p => p.estado === "Devuelto").length}</span>
             </div>
-            <div className="metric-cell__value">{misPrestamos.filter(p => p.estado === "Devuelto").length}</div>
-            <div className="metric-cell__footer">Obras reintegradas</div>
+            <div className="kpi-cell__footer">Obras reintegradas</div>
           </div>
-          <div className="metric-cell">
-            <div className="metric-cell__header">
-              <span className="metric-cell__label">Estado de Cuenta</span>
+
+          <div className="kpi-cell">
+            <div className="kpi-cell__label">Estado de Cuenta</div>
+            <div className="kpi-cell__main">
+              <span className="kpi-cell__val kpi-cell__val--accent">
+                {vencidos > 0 ? "Revisión" : "Solvente"}
+              </span>
             </div>
-            <div className="metric-cell__value metric-cell__value--accent">
-              {vencidos > 0 ? "Revisión" : "Solvente"}
-            </div>
-            <div className="metric-cell__footer">Sin sanciones vigentes</div>
+            <div className="kpi-cell__footer">Sin sanciones vigentes</div>
           </div>
         </section>
 
@@ -157,40 +162,63 @@ export function DashboardView({ libros = [], prestamos = [], onNav }) {
         </div>
       </header>
 
-      {/* Tira de KPIs de Mínima Carga Cognitiva (Ley de Hick) */}
-      <section className="metrics-grid" aria-label="Indicadores Clave de Desempeño">
-        <div className="metric-cell">
-          <div className="metric-cell__header">
-            <span className="metric-cell__label">Títulos Catalogados</span>
+      {/* Panel Unificado de KPIs: Contenedor horizontal continuo con divisores de 1px */}
+      <section className="kpi-strip-unified" aria-label="Indicadores Clave de Desempeño">
+        <div className="kpi-cell">
+          <div className="kpi-cell__label">Títulos Catalogados</div>
+          <div className="kpi-cell__main">
+            <span className="kpi-cell__val">{totalTitulos}</span>
           </div>
-          <div className="metric-cell__value">{totalTitulos}</div>
-          <div className="metric-cell__footer">Total en base de datos</div>
+          <div className="kpi-cell__footer">Total en base de datos</div>
         </div>
 
-        <div className="metric-cell">
-          <div className="metric-cell__header">
-            <span className="metric-cell__label">Ejemplares Disponibles</span>
+        <div className="kpi-cell">
+          <div className="kpi-cell__label">Ejemplares Disponibles</div>
+          <div className="kpi-cell__main">
+            <span className="kpi-cell__val kpi-cell__val--accent">{disponibles}</span>
+            <div className="kpi-cell__sparkline" aria-label="Tendencia de disponibilidad">
+              <svg width="78" height="28" viewBox="0 0 78 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="kpiSparkGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#228564" stopOpacity="0.30" />
+                    <stop offset="100%" stopColor="#228564" stopOpacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 2 22 Q 15 24 24 16 T 45 14 T 62 8 L 76 4"
+                  fill="none"
+                  stroke="#27996c"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M 2 22 Q 15 24 24 16 T 45 14 T 62 8 L 76 4 L 76 28 L 2 28 Z"
+                  fill="url(#kpiSparkGrad)"
+                />
+                <circle cx="76" cy="4" r="2.5" fill="#27996c" />
+              </svg>
+            </div>
           </div>
-          <div className="metric-cell__value metric-cell__value--accent">{disponibles}</div>
-          <div className="metric-cell__footer">De {totalStock} ejemplares totales</div>
+          <div className="kpi-cell__footer">De {totalStock} ejemplares totales</div>
         </div>
 
-        <div className="metric-cell">
-          <div className="metric-cell__header">
-            <span className="metric-cell__label">Préstamos Activos</span>
+        <div className="kpi-cell">
+          <div className="kpi-cell__label">Préstamos Activos</div>
+          <div className="kpi-cell__main">
+            <span className="kpi-cell__val">{prestados}</span>
           </div>
-          <div className="metric-cell__value">{prestados}</div>
-          <div className="metric-cell__footer">En custodia de personal</div>
+          <div className="kpi-cell__footer">En custodia de personal</div>
         </div>
 
-        <div className="metric-cell">
-          <div className="metric-cell__header">
-            <span className="metric-cell__label">Alertas de Vencimiento</span>
+        <div className="kpi-cell">
+          <div className="kpi-cell__label">Alertas de Vencimiento</div>
+          <div className="kpi-cell__main">
+            <span className={`kpi-cell__val${vencidos > 0 ? " kpi-cell__val--danger" : ""}`}>
+              {vencidos}
+            </span>
           </div>
-          <div className={`metric-cell__value${vencidos > 0 ? " metric-cell__value--danger" : ""}`}>
-            {vencidos}
-          </div>
-          <div className="metric-cell__footer">
+          <div className="kpi-cell__footer">
             {vencidos === 0 ? "Sin mora administrativa" : "Préstamos fuera de plazo"}
           </div>
         </div>
@@ -225,6 +253,7 @@ export function DashboardView({ libros = [], prestamos = [], onNav }) {
                       <th>Beneficiario</th>
                       <th>Límite Retorno</th>
                       <th>Estado</th>
+                      {onDevolver && <th style={{ textAlign: "right" }}>Operación</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -245,6 +274,17 @@ export function DashboardView({ libros = [], prestamos = [], onNav }) {
                               {esVencido ? "VENCIDO" : "ACTIVO"}
                             </span>
                           </td>
+                          {onDevolver && (
+                            <td style={{ textAlign: "right" }}>
+                              <button
+                                className="btn-outline btn-outline--sm"
+                                onClick={() => setConfirmDevolucion(p)}
+                                title="Finalizar préstamo e ingresar ejemplar a bodega"
+                              >
+                                Asentar Devolución
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       );
                     })}
@@ -315,6 +355,32 @@ export function DashboardView({ libros = [], prestamos = [], onNav }) {
           </div>
         </aside>
       </div>
+
+      {/* Modal Institucional de Confirmación con Fricción Intencional */}
+      <ConfirmDialog
+        isOpen={!!confirmDevolucion}
+        title="Confirmación de Devolución de Ejemplar"
+        subtitle="Esta operación asentará el retorno formal en el acervo institucional y actualizará el inventario disponible."
+        badge="AUDITORÍA Y CUSTODIA INSTITUCIONAL"
+        details={[
+          { label: "Folio de Préstamo", value: `#${String(confirmDevolucion?.id || 0).padStart(4, "0")}` },
+          { label: "Obra / Título", value: getLibroTitulo(confirmDevolucion?.libroId) },
+          { label: "Beneficiario", value: confirmDevolucion?.usuarioNombre || "" },
+          { label: "Documento de Identificación", value: confirmDevolucion?.usuarioIdentificacion || "" },
+          { label: "Procedimiento Almacenado", value: "sp_FinalizarDevolucion (SQL Server Transaccional)" }
+        ]}
+        warningMessage="Al asentar esta devolución se liberará la retención del ejemplar y el beneficiario quedará solvente en el sistema."
+        confirmText="Asentar Devolución Definitiva"
+        cancelText="Descartar y Regresar"
+        isDanger={false}
+        onConfirm={async () => {
+          if (confirmDevolucion && onDevolver) {
+            await onDevolver(confirmDevolucion.id);
+            setConfirmDevolucion(null);
+          }
+        }}
+        onCancel={() => setConfirmDevolucion(null)}
+      />
     </div>
   );
 }

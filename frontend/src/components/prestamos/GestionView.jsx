@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { ConfirmDialog } from "../shared/ConfirmDialog";
 
 export function GestionView({ prestamos = [], libros = [], onDevolver }) {
   const [filtro, setFiltro] = useState("Activo");
+  const [prestamoAConfirmar, setPrestamoAConfirmar] = useState(null);
   const FILTROS = ["Todos", "Activo", "Devuelto", "Vencidos"];
 
   const getLibro = (id) => libros.find(l => l.id === id);
@@ -95,7 +97,7 @@ export function GestionView({ prestamos = [], libros = [], onDevolver }) {
                       {p.estado === "Activo" ? (
                         <button 
                           className="btn-outline btn-outline--sm" 
-                          onClick={() => onDevolver(p.id)} 
+                          onClick={() => setPrestamoAConfirmar(p)} 
                           id={`btn-devolver-${p.id}`}
                           title="Finalizar préstamo e ingresar ejemplar a bodega"
                         >
@@ -114,6 +116,32 @@ export function GestionView({ prestamos = [], libros = [], onDevolver }) {
           </table>
         </div>
       )}
+
+      {/* Modal Institucional de Confirmación de Devolución */}
+      <ConfirmDialog
+        isOpen={!!prestamoAConfirmar}
+        title="Confirmación de Devolución de Ejemplar"
+        subtitle="Esta operación asentará el retorno formal en el acervo institucional y actualizará el inventario disponible."
+        badge="AUDITORÍA Y CUSTODIA INSTITUCIONAL"
+        details={[
+          { label: "Folio de Préstamo", value: `#${String(prestamoAConfirmar?.id || 0).padStart(4, "0")}` },
+          { label: "Obra / Título", value: getLibro(prestamoAConfirmar?.libroId)?.titulo || `Tomo #${prestamoAConfirmar?.libroId}` },
+          { label: "Beneficiario", value: prestamoAConfirmar?.usuarioNombre || "" },
+          { label: "Documento de Identificación", value: prestamoAConfirmar?.usuarioIdentificacion || "" },
+          { label: "Procedimiento Almacenado", value: "sp_FinalizarDevolucion (SQL Server Transaccional)" }
+        ]}
+        warningMessage="Al asentar esta devolución se liberará la retención del ejemplar físico y el beneficiario quedará solvente en el sistema."
+        confirmText="Asentar Devolución Definitiva"
+        cancelText="Descartar y Regresar"
+        isDanger={false}
+        onConfirm={async () => {
+          if (prestamoAConfirmar && onDevolver) {
+            await onDevolver(prestamoAConfirmar.id);
+            setPrestamoAConfirmar(null);
+          }
+        }}
+        onCancel={() => setPrestamoAConfirmar(null)}
+      />
     </div>
   );
 }

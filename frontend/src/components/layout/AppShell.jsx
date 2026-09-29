@@ -90,7 +90,7 @@ export function AppShell() {
   const renderView = () => {
     switch (activeView) {
       case "dashboard":
-        return <DashboardView libros={libros} prestamos={prestamos} onNav={setActiveView} />;
+        return <DashboardView libros={libros} prestamos={prestamos} onNav={setActiveView} onDevolver={handleDevolucion} />;
       case "catalogo":
         return <CatalogoView libros={libros} onSolicitarPrestamo={handleSolicitarPrestamo} loading={apiLoading} />;
       case "misprestamos":

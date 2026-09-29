@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { ConfirmDialog } from "../shared/ConfirmDialog";
 
 export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
   const { usuario } = useAuth();
@@ -7,7 +8,7 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
   const [query, setQuery] = useState("");
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({ usuarioNombre: usuario?.nombre || "", usuarioIdentificacion: usuario?.dui || "", diasPrestamo: 7 });
-  const [submitting, setSubmitting] = useState(false);
+  const [confirmacionData, setConfirmacionData] = useState(null);
 
   const filtrados = libros.filter(l => {
     const q = query.toLowerCase();
@@ -27,12 +28,13 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handlePreSubmit = (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    await onSolicitarPrestamo(modal, form);
-    setSubmitting(false);
-    setModal(null);
+    if (!form.usuarioNombre || !form.usuarioIdentificacion) return;
+    setConfirmacionData({
+      libro: modal,
+      form: { ...form }
+    });
   };
 
   return (
@@ -132,7 +134,7 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
         )}
       </div>
 
-      {/* Modal de Solicitud de Préstamo */}
+      {/* Modal de Solicitud de Préstamo (Paso 1: Captura de Datos) */}
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)} role="dialog" aria-modal="true">
           <div className="modal" onClick={e => e.stopPropagation()}>
@@ -149,7 +151,7 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="modal__body">
+            <form onSubmit={handlePreSubmit} className="modal__body">
               <div className="field-group">
                 <label className="field-label" htmlFor="modal-nombre">Nombre completo del beneficiario</label>
                 <input
@@ -192,14 +194,41 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
                 <button type="button" className="btn-secondary" onClick={() => setModal(null)}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn-primary" disabled={submitting} id="modal-confirm">
-                  {submitting ? <span className="btn-spinner" /> : "Confirmar Emisión"}
+                <button type="submit" className="btn-primary" id="modal-submit-step1">
+                  Validar y Continuar →
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      {/* Modal de Validación Transaccional con Fricción Intencional (Paso 2: Confirmación Estricta) */}
+      <ConfirmDialog
+        isOpen={!!confirmacionData}
+        title="Confirmación de Registro de Préstamo"
+        subtitle="Se emitirá un compromiso de custodia institucional con reserva de ejemplar físico."
+        badge="VALIDACIÓN OPERATIVA OBLIGATORIA"
+        details={[
+          { label: "Obra Solicitada", value: confirmacionData?.libro?.titulo || "" },
+          { label: "Beneficiario Asignado", value: confirmacionData?.form?.usuarioNombre || "" },
+          { label: "Documento de Identificación", value: confirmacionData?.form?.usuarioIdentificacion || "" },
+          { label: "Plazo de Custodia", value: `${confirmacionData?.form?.diasPrestamo || 7} días hábiles` },
+          { label: "Procedimiento Almacenado", value: "sp_RegistrarPrestamo (SQL Server Transaccional)" }
+        ]}
+        warningMessage="Esta acción decrementará el inventario disponible de inmediato y generará un folio de auditoría auditable."
+        confirmText="Emitir Préstamo Definitivo"
+        cancelText="Revisar Formulario"
+        isDanger={false}
+        onConfirm={async () => {
+          if (confirmacionData) {
+            await onSolicitarPrestamo(confirmacionData.libro, confirmacionData.form);
+            setConfirmacionData(null);
+            setModal(null);
+          }
+        }}
+        onCancel={() => setConfirmacionData(null)}
+      />
     </div>
   );
 }
