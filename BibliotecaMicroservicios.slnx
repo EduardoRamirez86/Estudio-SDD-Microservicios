@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/Catalogo/">
+    <Project Path="src/Services/Catalogo/Catalogo.Api/Catalogo.Api.csproj" />
+    <Project Path="src/Services/Catalogo/Catalogo.Application/Catalogo.Application.csproj" />
+    <Project Path="src/Services/Catalogo/Catalogo.Domain/Catalogo.Domain.csproj" />
+    <Project Path="src/Services/Catalogo/Catalogo.Infrastructure/Catalogo.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/Prestamos/">
+    <Project Path="src/Services/Prestamos/Prestamos.Api/Prestamos.Api.csproj" />
+    <Project Path="src/Services/Prestamos/Prestamos.Application/Prestamos.Application.csproj" />
+    <Project Path="src/Services/Prestamos/Prestamos.Domain/Prestamos.Domain.csproj" />
+    <Project Path="src/Services/Prestamos/Prestamos.Infrastructure/Prestamos.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Catalogo.Application.Tests/Catalogo.Application.Tests.csproj" />
+    <Project Path="tests/Prestamos.Application.Tests/Prestamos.Application.Tests.csproj" />
+  </Folder>
+</Solution>
