@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 
@@ -47,42 +47,98 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
           </button>
         </header>
 
-        {/* Panel Unificado de KPIs Lector */}
-        <section className="kpi-strip-unified" aria-label="Indicadores de Custodia">
-          <div className="kpi-cell">
-            <div className="kpi-cell__label">Préstamos Activos</div>
-            <div className="kpi-cell__main">
-              <span className="kpi-cell__val">{misPrestamos.filter(p => p.estado === "Activo").length}</span>
+        {/* Consola Táctil Lector */}
+        <section className="kpi-console-chassis" aria-label="Indicadores de Custodia">
+          <div className="kpi-tactile-module kpi-tactile-module--titanium">
+            <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+            <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                <path d="M6 6h10M6 10h10" strokeLinecap="round" />
+              </svg>
             </div>
-            <div className="kpi-cell__footer">Material en su custodia</div>
+            <div className="kpi-tactile__content">
+              <span className="kpi-tactile__label">Préstamos Activos</span>
+              <div className="kpi-tactile__val-row">
+                <span className="kpi-tactile__val kpi-tactile__val--titanium">
+                  {misPrestamos.filter(p => p.estado === "Activo").length}
+                </span>
+              </div>
+              <span className="kpi-tactile__footer">Material en su custodia</span>
+            </div>
           </div>
 
-          <div className="kpi-cell">
-            <div className="kpi-cell__label">Próximos a Vencer</div>
-            <div className="kpi-cell__main">
-              <span className={`kpi-cell__val${miVenceProxima > 0 ? " kpi-cell__val--danger" : ""}`}>
-                {miVenceProxima}
-              </span>
+          <div className="kpi-tactile-module kpi-tactile-module--brass">
+            <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+            <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" strokeLinecap="round" />
+              </svg>
             </div>
-            <div className="kpi-cell__footer">Vencimiento en ≤ 3 días</div>
+            <div className="kpi-tactile__content">
+              <span className="kpi-tactile__label">Próximos a Vencer</span>
+              <div className="kpi-tactile__val-row">
+                <span className={`kpi-tactile__val kpi-tactile__val--brass${miVenceProxima > 0 ? " kpi-tactile__val--danger" : ""}`}>
+                  {miVenceProxima}
+                </span>
+              </div>
+              <span className="kpi-tactile__footer">Vencimiento en ≤ 3 días</span>
+            </div>
           </div>
 
-          <div className="kpi-cell">
-            <div className="kpi-cell__label">Historial Devueltos</div>
-            <div className="kpi-cell__main">
-              <span className="kpi-cell__val">{misPrestamos.filter(p => p.estado === "Devuelto").length}</span>
+          <div className="kpi-tactile-module kpi-tactile-module--sapphire">
+            <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+            <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
-            <div className="kpi-cell__footer">Obras reintegradas</div>
+            <div className="kpi-tactile__content">
+              <span className="kpi-tactile__label">Historial Devueltos</span>
+              <div className="kpi-tactile__val-row">
+                <span className="kpi-tactile__val kpi-tactile__val--sapphire">
+                  {misPrestamos.filter(p => p.estado === "Devuelto").length}
+                </span>
+              </div>
+              <span className="kpi-tactile__footer">Obras reintegradas</span>
+            </div>
           </div>
 
-          <div className="kpi-cell">
-            <div className="kpi-cell__label">Estado de Cuenta</div>
-            <div className="kpi-cell__main">
-              <span className="kpi-cell__val kpi-cell__val--accent">
-                {vencidos > 0 ? "Revisión" : "Solvente"}
-              </span>
+          <div className="kpi-tactile-module kpi-tactile-module--emerald">
+            <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+            <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+            <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
-            <div className="kpi-cell__footer">Sin sanciones vigentes</div>
+            <div className="kpi-tactile__content">
+              <span className="kpi-tactile__label">Estado de Cuenta</span>
+              <div className="kpi-tactile__val-row">
+                <span className="kpi-tactile__val kpi-tactile__val--emerald">
+                  {vencidos > 0 ? "Revisión" : "Solvente"}
+                </span>
+              </div>
+              <span className="kpi-tactile__footer">Sin sanciones vigentes</span>
+            </div>
           </div>
         </section>
 
@@ -162,64 +218,141 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
         </div>
       </header>
 
-      {/* Panel Unificado de KPIs: Contenedor horizontal continuo con divisores de 1px */}
-      <section className="kpi-strip-unified" aria-label="Indicadores Clave de Desempeño">
-        <div className="kpi-cell">
-          <div className="kpi-cell__label">Títulos Catalogados</div>
-          <div className="kpi-cell__main">
-            <span className="kpi-cell__val">{totalTitulos}</span>
-          </div>
-          <div className="kpi-cell__footer">Total en base de datos</div>
-        </div>
+      {/* Consola Táctil Física de KPIs: Chasis de Titanio Oscuro y Módulos de Metales & Gemas */}
+      <section className="kpi-console-chassis" aria-label="Consola de Indicadores Clave de Desempeño">
+        {/* Módulo 1: Titanio Cepillado / Gris Plata */}
+        <div className="kpi-tactile-module kpi-tactile-module--titanium">
+          <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
 
-        <div className="kpi-cell">
-          <div className="kpi-cell__label">Ejemplares Disponibles</div>
-          <div className="kpi-cell__main">
-            <span className="kpi-cell__val kpi-cell__val--accent">{disponibles}</span>
-            <div className="kpi-cell__sparkline" aria-label="Tendencia de disponibilidad">
-              <svg width="78" height="28" viewBox="0 0 78 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="kpiSparkGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#228564" stopOpacity="0.30" />
-                    <stop offset="100%" stopColor="#228564" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M 2 22 Q 15 24 24 16 T 45 14 T 62 8 L 76 4"
-                  fill="none"
-                  stroke="#27996c"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M 2 22 Q 15 24 24 16 T 45 14 T 62 8 L 76 4 L 76 28 L 2 28 Z"
-                  fill="url(#kpiSparkGrad)"
-                />
-                <circle cx="76" cy="4" r="2.5" fill="#27996c" />
-              </svg>
+          <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <ellipse cx="12" cy="5" rx="8" ry="2.5" />
+              <path d="M4 5v5c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5V5" />
+              <path d="M4 10v5c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5v-5" />
+              <circle cx="17.5" cy="17.5" r="2.5" strokeWidth="1.6" />
+              <path d="M17.5 13.5v1.2M17.5 20.3v1.2M13.5 17.5h1.2M20.3 17.5h1.2" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className="kpi-tactile__content">
+            <span className="kpi-tactile__label">Títulos Catalogados</span>
+            <div className="kpi-tactile__val-row">
+              <span className="kpi-tactile__val kpi-tactile__val--titanium">{totalTitulos}</span>
             </div>
+            <span className="kpi-tactile__footer">Total en base de datos</span>
           </div>
-          <div className="kpi-cell__footer">De {totalStock} ejemplares totales</div>
         </div>
 
-        <div className="kpi-cell">
-          <div className="kpi-cell__label">Préstamos Activos</div>
-          <div className="kpi-cell__main">
-            <span className="kpi-cell__val">{prestados}</span>
+        {/* Módulo 2: Esmeralda Pulido (Verde con Sparkline en Micro-Cuadrícula) */}
+        <div className="kpi-tactile-module kpi-tactile-module--emerald">
+          <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+          <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path d="M4 6.5 12 3l8 3.5L12 10z" />
+              <path d="M4 10.5 12 14l8-3.5" />
+              <path d="M4 14.5 12 18l8-3.5" />
+              <path d="M4 18.5 12 22l8-3.5" />
+              <path d="M4 6.5v12M20 6.5v12" />
+            </svg>
           </div>
-          <div className="kpi-cell__footer">En custodia de personal</div>
+
+          <div className="kpi-tactile__content">
+            <span className="kpi-tactile__label">Ejemplares Disponibles</span>
+            <div className="kpi-tactile__val-row">
+              <span className="kpi-tactile__val kpi-tactile__val--emerald">{disponibles}</span>
+              <div className="kpi-tactile__sparkline-container" aria-label="Tendencia de disponibilidad">
+                <svg width="68" height="28" viewBox="0 0 68 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="tactileGridDash" width="6" height="6" patternUnits="userSpaceOnUse">
+                      <path d="M 6 0 L 0 0 0 6" fill="none" stroke="rgba(52, 211, 153, 0.16)" strokeWidth="0.5" />
+                    </pattern>
+                    <linearGradient id="tactileSparkGradDash" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#34d399" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="68" height="28" fill="url(#tactileGridDash)" rx="3" />
+                  <path
+                    d="M 2 20 Q 12 22 22 15 T 40 13 T 54 7 L 66 4"
+                    fill="none"
+                    stroke="#34d399"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="drop-shadow(0 0 4px rgba(52, 211, 153, 0.9))"
+                  />
+                  <path
+                    d="M 2 20 Q 12 22 22 15 T 40 13 T 54 7 L 66 4 L 66 28 L 2 28 Z"
+                    fill="url(#tactileSparkGradDash)"
+                  />
+                  <circle cx="66" cy="4" r="2.2" fill="#a7f3d0" filter="drop-shadow(0 0 3px #34d399)" />
+                </svg>
+              </div>
+            </div>
+            <span className="kpi-tactile__footer">De {totalStock} ejemplares totales</span>
+          </div>
         </div>
 
-        <div className="kpi-cell">
-          <div className="kpi-cell__label">Alertas de Vencimiento</div>
-          <div className="kpi-cell__main">
-            <span className={`kpi-cell__val${vencidos > 0 ? " kpi-cell__val--danger" : ""}`}>
-              {vencidos}
+        {/* Módulo 3: Zafiro Pulido (Azul Institucional) */}
+        <div className="kpi-tactile-module kpi-tactile-module--sapphire">
+          <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+          <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <circle cx="18.5" cy="14.5" r="2.5" strokeWidth="1.6" />
+              <path d="M18.5 10.5v1.2M18.5 17.3v1.2M14.5 14.5h1.2M21.3 14.5h1.2" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className="kpi-tactile__content">
+            <span className="kpi-tactile__label">Préstamos Activos</span>
+            <div className="kpi-tactile__val-row">
+              <span className="kpi-tactile__val kpi-tactile__val--sapphire">{prestados}</span>
+            </div>
+            <span className="kpi-tactile__footer">En custodia de personal</span>
+          </div>
+        </div>
+
+        {/* Módulo 4: Latón y Ámbar Cálido (Oro Metálico / Alertas) */}
+        <div className="kpi-tactile-module kpi-tactile-module--brass">
+          <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--bl" aria-hidden="true" />
+          <span className="kpi-rivet kpi-rivet--br" aria-hidden="true" />
+
+          <div className="kpi-tactile__icon-cluster" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <rect x="2" y="4" width="15" height="17" rx="2" />
+              <line x1="12" y1="2" x2="12" y2="5" strokeLinecap="round" />
+              <line x1="6" y1="2" x2="6" y2="5" strokeLinecap="round" />
+              <line x1="2" y1="9" x2="17" y2="9" />
+              <path d="M18 16a2 2 0 0 0 2 0c0-1.2.7-1.8 1-2.4a2.5 2.5 0 0 0-4.8-.8c.2.6.9 1.2.9 2.2" strokeWidth="1.5" />
+              <path d="M18 18.5a.8.8 0 0 0 1.6 0" strokeWidth="1.5" />
+            </svg>
+          </div>
+
+          <div className="kpi-tactile__content">
+            <span className="kpi-tactile__label">Alertas de Vencimiento</span>
+            <div className="kpi-tactile__val-row">
+              <span className={`kpi-tactile__val kpi-tactile__val--brass${vencidos > 0 ? " kpi-tactile__val--danger" : ""}`}>
+                {vencidos}
+              </span>
+            </div>
+            <span className="kpi-tactile__footer">
+              {vencidos === 0 ? "Sin mora administrativa" : "Préstamos fuera de plazo"}
             </span>
-          </div>
-          <div className="kpi-cell__footer">
-            {vencidos === 0 ? "Sin mora administrativa" : "Préstamos fuera de plazo"}
           </div>
         </div>
       </section>
@@ -302,45 +435,159 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               Resumen Operativo
             </span>
+            <span className="badge-count" style={{ fontSize: "0.62rem" }}>AUDITORIA ACTIVA</span>
           </div>
+
           <div className="skeleton-card__body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px", fontSize: "0.72rem" }}>
-                <span style={{ color: "var(--color-text-secondary)" }}>Ocupación de Acervo</span>
-                <strong style={{ color: "var(--color-text-primary)", fontFamily: "var(--font-family-mono)" }}>
-                  {porcentajeOcupacion}% prestado
-                </strong>
+            {/* Grafica Circular Hueca (Radial Bar / Donut Chart con Anillos Concentricos) */}
+            <div className="donut-chart-container">
+              <div className="donut-chart-wrapper">
+                <svg width="130" height="130" viewBox="0 0 130 130" className="donut-svg" aria-label="Grafica de ocupacion">
+                  <defs>
+                    <linearGradient id="donutGradEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#6ee7b7" />
+                      <stop offset="50%" stopColor="#34d399" />
+                      <stop offset="100%" stopColor="#059669" />
+                    </linearGradient>
+                    <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.75" />
+                    </filter>
+                  </defs>
+
+                  {/* Pistas de fondo en gris carbon neutro */}
+                  <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255, 255, 255, 0.06)" strokeWidth="6.5" />
+                  <circle cx="65" cy="65" r="39" fill="none" stroke="rgba(255, 255, 255, 0.04)" strokeWidth="4.5" />
+                  <circle cx="65" cy="65" r="29" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="3.5" />
+
+                  {/* Anillo exterior luminoso: Ocupacion de Acervo */}
+                  <circle
+                    cx="65" cy="65" r="50"
+                    fill="none"
+                    stroke="url(#donutGradEmerald)"
+                    strokeWidth="6.5"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 50}
+                    strokeDashoffset={2 * Math.PI * 50 * (1 - (porcentajeOcupacion || 0) / 100)}
+                    transform="rotate(-90 65 65)"
+                    filter="url(#emeraldGlow)"
+                  />
+                  {/* Anillo medio: Disponibilidad proporcional en azul zafiro */}
+                  <circle
+                    cx="65" cy="65" r="39"
+                    fill="none"
+                    stroke="#2563eb"
+                    strokeWidth="4.5"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 39}
+                    strokeDashoffset={2 * Math.PI * 39 * (1 - (totalStock > 0 ? (disponibles / totalStock) * 0.75 : 0.5))}
+                    transform="rotate(-90 65 65)"
+                    strokeOpacity="0.75"
+                  />
+                  {/* Anillo interior: Rotacion de acervo en tono ambar */}
+                  <circle
+                    cx="65" cy="65" r="29"
+                    fill="none"
+                    stroke="#f59e0b"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 29}
+                    strokeDashoffset={2 * Math.PI * 29 * 0.65}
+                    transform="rotate(-90 65 65)"
+                    strokeOpacity="0.65"
+                  />
+                </svg>
+
+                {/* Lectura numerica central */}
+                <div className="donut-center-readout">
+                  <span className="donut-center-val">{porcentajeOcupacion}%</span>
+                  <span className="donut-center-sub">OCUPACION</span>
+                </div>
               </div>
-              <div className="stock-meter">
-                <div 
-                  className="stock-meter__fill" 
-                  style={{ width: `${porcentajeOcupacion}%` }}
-                />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px", fontSize: "0.65rem", color: "var(--color-text-muted)" }}>
-                <span>Disponibles: {disponibles}</span>
-                <span>Prestados: {totalStock - disponibles}</span>
+
+              {/* Leyenda analitica a la derecha */}
+              <div className="donut-legend">
+                <div className="donut-legend-item">
+                  <span className="donut-legend-dot donut-legend-dot--emerald" />
+                  <div className="donut-legend-info">
+                    <span className="donut-legend-label">Prestados</span>
+                    <strong className="donut-legend-val">{totalStock - disponibles} ej.</strong>
+                  </div>
+                </div>
+                <div className="donut-legend-item">
+                  <span className="donut-legend-dot donut-legend-dot--sapphire" />
+                  <div className="donut-legend-info">
+                    <span className="donut-legend-label">Disponibles</span>
+                    <strong className="donut-legend-val">{disponibles} ej.</strong>
+                  </div>
+                </div>
+                <div className="donut-legend-item">
+                  <span className="donut-legend-dot donut-legend-dot--amber" />
+                  <div className="donut-legend-info">
+                    <span className="donut-legend-label">Stock Total</span>
+                    <strong className="donut-legend-val">{totalStock} ej.</strong>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div style={{ borderTop: "1px solid var(--color-border-muted)", paddingTop: "12px" }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                Parámetros de Custodia
+            {/* Parametros de Custodia con Checkboxes de Validacion */}
+            <div className="custodia-section">
+              <div className="custodia-section__title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>Parametros de Custodia</span>
               </div>
-              <ul style={{ listStyle: "none", fontSize: "0.72rem", color: "var(--color-text-muted)", display: "flex", flexDirection: "column", gap: "6px" }}>
-                <li style={{ display: "flex", gap: "6px" }}>
-                  <span style={{ color: "var(--color-accent-primary)" }}>▪</span>
-                  <span>Plazo estándar: 7 a 15 días hábiles.</span>
-                </li>
-                <li style={{ display: "flex", gap: "6px" }}>
-                  <span style={{ color: "var(--color-accent-primary)" }}>▪</span>
-                  <span>Límite máximo: 3 ejemplares por beneficiario.</span>
-                </li>
-                <li style={{ display: "flex", gap: "6px" }}>
-                  <span style={{ color: "var(--color-accent-primary)" }}>▪</span>
-                  <span>Auditoría transaccional: Stored Procedures.</span>
-                </li>
-              </ul>
+
+              <div className="custodia-checklist">
+                <div className="custodia-check-item">
+                  <div className="custodia-checkbox" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div className="custodia-check-text">
+                    <span className="custodia-check-title">Plazo estandar:</span>
+                    <span className="custodia-check-desc">7 a 15 dias habiles validados.</span>
+                  </div>
+                </div>
+
+                <div className="custodia-check-item">
+                  <div className="custodia-checkbox" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div className="custodia-check-text">
+                    <span className="custodia-check-title">Limite por beneficiario:</span>
+                    <span className="custodia-check-desc">Maximo 3 ejemplares por solicitante.</span>
+                  </div>
+                </div>
+
+                <div className="custodia-check-item">
+                  <div className="custodia-checkbox" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div className="custodia-check-text">
+                    <span className="custodia-check-title">Auditoria transaccional:</span>
+                    <span className="custodia-check-desc">Stored Procedures en SQL Server.</span>
+                  </div>
+                </div>
+
+                <div className="custodia-check-item">
+                  <div className="custodia-checkbox" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div className="custodia-check-text">
+                    <span className="custodia-check-title">Integridad de Acervo:</span>
+                    <span className="custodia-check-desc">Aislamiento ACID en DB_Catalogo.</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div style={{ borderTop: "1px solid var(--color-border-muted)", paddingTop: "12px" }}>
@@ -349,7 +596,7 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                 style={{ width: "100%", justifyContent: "center" }}
                 onClick={() => onNav?.("catalogo")}
               >
-                Consultar Todo el Catálogo
+                Consultar Todo el Catalogo
               </button>
             </div>
           </div>

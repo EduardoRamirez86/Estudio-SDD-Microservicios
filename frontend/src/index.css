@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 /* ==========================================================================
    DESIGN TOKENS — SECTOR FINANCIERO / ASEGURADOR (ASESUISA / SYNTEPRO)
@@ -465,78 +465,309 @@ code, kbd, samp, pre {
   color: var(--color-text-secondary);
 }
 
-/* Panel Unificado de KPIs (Contenedor continuo horizontal con divisores sutiles de 1px) */
-.kpi-strip-unified {
+/* ==========================================================================
+   CONSOLA TÃCTIL FÃSICA DE KPIS (Dark Neumorphism & Skeuomorphic Metal)
+   ========================================================================== */
+
+/* Chasis Envolvente de Acero Oscuro con Edge Lighting Cian/Teal */
+.kpi-console-chassis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background-color: var(--color-surface-base);
-  border: 1px solid var(--color-border-muted);
-  border-radius: var(--radius-md);
+  gap: var(--space-16);
+  padding: 14px;
+  background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.45) 0%, transparent 75%),
+              linear-gradient(180deg, #1e242c 0%, #14181f 45%, #0d1015 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 
+    0 24px 48px -12px rgba(0, 0, 0, 0.9),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8),
+    0 0 32px -4px rgba(20, 184, 166, 0.15);
+  position: relative;
   overflow: hidden;
 }
 
-.kpi-cell {
-  padding: var(--space-16) var(--space-24);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid var(--color-border-muted);
-  min-height: 108px;
-  background-color: transparent;
-  text-align: left;
+.kpi-console-chassis::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.45) 50%, transparent 100%);
+  pointer-events: none;
 }
 
-.kpi-cell:last-child {
-  border-right: none;
-}
-
-.kpi-cell__label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  text-align: left;
-}
-
-.kpi-cell__main {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-8);
-  margin: 6px 0;
-}
-
-.kpi-cell__val {
-  font-size: 2.2rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--color-text-primary);
-  text-align: left;
-}
-
-.kpi-cell__val--accent {
-  color: var(--color-accent-primary);
-}
-
-.kpi-cell__val--danger {
-  color: var(--color-status-danger);
-}
-
-.kpi-cell__sparkline {
-  display: flex;
-  align-items: flex-end;
-  opacity: 0.9;
-}
-
-.kpi-cell__footer {
-  font-size: 0.68rem;
-  color: var(--color-text-muted);
-  text-align: left;
+/* MÃ³dulo TÃ¡ctil Base (Cartucho Extruido) */
+.kpi-tactile-module {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 14px;
+  padding: 16px 16px 16px 14px;
+  border-radius: 12px;
+  min-height: 112px;
+  text-align: left;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  overflow: hidden;
+}
+
+.kpi-tactile-module:hover {
+  transform: translateY(-2px);
+}
+
+/* Remaches / Tornillos MetÃ¡licos Hexagonales en las Esquinas */
+.kpi-rivet {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #94a3b8 20%, #475569 65%, #0f172a 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.kpi-rivet::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  width: 70%;
+  height: 1px;
+  background: #090d14;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.kpi-rivet--tl { top: 6px; left: 6px; }
+.kpi-rivet--tr { top: 6px; right: 6px; }
+.kpi-rivet--bl { bottom: 6px; left: 6px; }
+.kpi-rivet--br { bottom: 6px; right: 6px; }
+
+/* -------------------------------------------------------------
+   MATERIALES Y ACABADOS METÃLICOS (Gradients & Deep Inset Shadows)
+   ------------------------------------------------------------- */
+
+/* MÃ³dulo 1: Titanio y Acero Pulido (Gris Plata) */
+.kpi-tactile-module--titanium {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
+    linear-gradient(145deg, #38414d 0%, #252c36 28%, #191e25 60%, #2c3440 85%, #1d232b 100%);
+  border: 1px solid rgba(203, 213, 225, 0.38);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.85),
+    inset 0 2px 2px rgba(255, 255, 255, 0.32),
+    inset 0 -3px 4px rgba(0, 0, 0, 0.9),
+    inset 1px 0 2px rgba(255, 255, 255, 0.12),
+    0 0 22px -3px rgba(148, 163, 184, 0.22);
+}
+
+.kpi-tactile-module--titanium:hover {
+  box-shadow: 
+    0 16px 34px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.95),
+    0 0 28px 0 rgba(148, 163, 184, 0.35);
+}
+
+/* MÃ³dulo 2: Esmeralda Pulido (Verde Joya con Edge Lighting Intenso) */
+.kpi-tactile-module--emerald {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(52, 211, 153, 0.25) 0%, transparent 60%),
+    linear-gradient(145deg, #0a4f3a 0%, #06392a 28%, #03231a 60%, #0b553e 85%, #052c20 100%);
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(110, 231, 183, 0.52),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(52, 211, 153, 0.25),
+    0 8px 30px -4px rgba(16, 185, 129, 0.45);
+}
+
+.kpi-tactile-module--emerald:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(110, 231, 183, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(16, 185, 129, 0.65);
+}
+
+/* MÃ³dulo 3: Zafiro Profundo (Azul Institucional) */
+.kpi-tactile-module--sapphire {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(96, 165, 250, 0.22) 0%, transparent 60%),
+    linear-gradient(145deg, #103b6d 0%, #0b2a4f 28%, #051b34 60%, #12437c 85%, #08213f 100%);
+  border: 1px solid rgba(96, 165, 250, 0.52);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(147, 197, 253, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(96, 165, 250, 0.22),
+    0 8px 30px -4px rgba(37, 99, 235, 0.42);
+}
+
+.kpi-tactile-module--sapphire:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(147, 197, 253, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(37, 99, 235, 0.62);
+}
+
+/* MÃ³dulo 4: LatÃ³n y Ãmbar CÃ¡lido (Oro MetÃ¡lico / Alerta) */
+.kpi-tactile-module--brass {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(251, 191, 36, 0.22) 0%, transparent 60%),
+    linear-gradient(145deg, #61420a 0%, #462f06 28%, #2c1d03 60%, #68470c 85%, #382504 100%);
+  border: 1px solid rgba(251, 191, 36, 0.52);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(253, 230, 138, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(251, 191, 36, 0.22),
+    0 8px 30px -4px rgba(217, 119, 6, 0.42);
+}
+
+.kpi-tactile-module--brass:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(253, 230, 138, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(217, 119, 6, 0.62);
+}
+
+/* -------------------------------------------------------------
+   ICONOGRAFÃA GRABADA EN PROFUNDIDAD (Debossed Well & Filters)
+   ------------------------------------------------------------- */
+.kpi-tactile__icon-cluster {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.35) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 3px 6px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.kpi-tactile-module--titanium .kpi-tactile__icon-cluster svg {
+  color: #cbd5e1;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.25)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95));
+}
+
+.kpi-tactile-module--emerald .kpi-tactile__icon-cluster svg {
+  color: #34d399;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(52, 211, 153, 0.6));
+}
+
+.kpi-tactile-module--sapphire .kpi-tactile__icon-cluster svg {
+  color: #60a5fa;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(96, 165, 250, 0.6));
+}
+
+.kpi-tactile-module--brass .kpi-tactile__icon-cluster svg {
+  color: #fbbf24;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+}
+
+/* -------------------------------------------------------------
+   CONTENIDO, CIFRAS BISELADAS Y JERARQUÃA
+   ------------------------------------------------------------- */
+.kpi-tactile__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.kpi-tactile__label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  margin-bottom: 2px;
+}
+
+.kpi-tactile__val-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 2px 0 4px 0;
+}
+
+/* Cifras con Micro-Bisel MetÃ¡lico y Debossed Effect */
+.kpi-tactile__val {
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-family: var(--font-family-mono);
+}
+
+.kpi-tactile__val--titanium {
+  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 45%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9)) drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.45));
+}
+
+.kpi-tactile__val--emerald {
+  background: linear-gradient(180deg, #d1fae5 0%, #34d399 45%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(16, 185, 129, 0.7));
+}
+
+.kpi-tactile__val--sapphire {
+  background: linear-gradient(180deg, #dbeafe 0%, #60a5fa 45%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(37, 99, 235, 0.7));
+}
+
+.kpi-tactile__val--brass {
+  background: linear-gradient(180deg, #fef3c7 0%, #f59e0b 45%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(245, 158, 11, 0.7));
+}
+
+.kpi-tactile__val--danger {
+  background: linear-gradient(180deg, #fecaca 0%, #ef4444 45%, #b91c1c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(239, 68, 68, 0.7));
+}
+
+/* Sparkline Integrada con Micro-CuadrÃ­cula */
+.kpi-tactile__sparkline-container {
+  display: flex;
+  align-items: flex-end;
+  padding: 2px 4px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.kpi-tactile__footer {
+  font-size: 0.67rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Rejilla de Contenido Principal (2 Columnas: 7fr / 3fr) */
@@ -1838,16 +2069,209 @@ code, kbd, samp, pre {
   .arch-grid-layout {
     grid-template-columns: 1fr;
   }
-  .kpi-strip-unified {
+  .kpi-console-chassis, .kpi-strip-unified {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .kpi-strip-unified {
+  .kpi-console-chassis, .kpi-strip-unified {
     grid-template-columns: 1fr;
   }
   .app-shell__content {
     padding: var(--space-16);
   }
+}
+
+
+/* ==========================================================================
+   RESUMEN OPERATIVO & PARÃMETROS DE CUSTODIA (Donut Chart & Checkmarks)
+   ========================================================================== */
+
+/* Contenedor del Donut Chart con Leyenda AnalÃ­tica */
+.donut-chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: var(--space-8) 0 var(--space-12) 0;
+}
+
+.donut-chart-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-svg {
+  transform: rotate(0deg);
+  overflow: visible;
+}
+
+.donut-center-readout {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-center-val {
+  font-family: var(--font-family-mono);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.45);
+}
+
+.donut-center-sub {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  margin-top: 3px;
+}
+
+/* Leyenda del Donut Chart */
+.donut-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.donut-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.donut-legend-dot--emerald {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.donut-legend-dot--sapphire {
+  background-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+.donut-legend-dot--amber {
+  background-color: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.donut-legend-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.donut-legend-label {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.donut-legend-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+}
+
+/* SecciÃ³n de ParÃ¡metros de Custodia con Checkmarks Reales */
+.custodia-section {
+  border-top: 1px solid var(--color-border-muted);
+  padding-top: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custodia-section__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+
+.custodia-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.custodia-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.custodia-check-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(52, 211, 153, 0.2);
+}
+
+.custodia-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(145deg, #094734, #052c20);
+  border: 1px solid rgba(52, 211, 153, 0.7);
+  box-shadow: 
+    0 0 8px rgba(16, 185, 129, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.custodia-checkbox svg {
+  color: #34d399;
+  filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.8));
+}
+
+.custodia-check-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.7rem;
+}
+
+.custodia-check-title {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.custodia-check-desc {
+  color: var(--color-text-muted);
+  font-size: 0.65rem;
+  line-height: 1.25;
 }
