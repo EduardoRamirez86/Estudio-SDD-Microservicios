@@ -1,4 +1,4 @@
-﻿using Catalogo.Application.Services;
+using Catalogo.Application.Services;
 using Catalogo.Domain.Contracts;
 using Catalogo.Infrastructure.Data;
 using Catalogo.Infrastructure.Repositories;
@@ -9,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<ILibroRepository, LibroRepository>();
 builder.Services.AddScoped<ILibroService, LibroService>();
+
+// Cliente HTTP optimizado para streaming de lectura digital asincrona
+builder.Services.AddHttpClient("DigitalReaderClient", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
