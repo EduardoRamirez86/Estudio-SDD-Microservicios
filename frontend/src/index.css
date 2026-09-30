@@ -1,52 +1,53 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 /* ==========================================================================
    DESIGN TOKENS — SECTOR FINANCIERO / ASEGURADOR (ASESUISA / SYNTEPRO)
    Filosofía: Contraste WCAG estricto, 0% brillo gamer, paleta carbón/pizarra,
    rejilla matemática de espaciado en múltiplos de 8px, un solo acento institucional.
    ========================================================================== */
 :root {
-  /* Paleta Base: Pizarra y Carbón Neutro */
-  --color-background-base:     #0c0e12;
-  --color-surface-base:        #12151b;
-  --color-surface-elevated:    #181c24;
-  --color-surface-subtle:      #1f242e;
+  /* Paleta Base Light Mode (Default) */
+  --color-background-base:     #f8fafc; /* Slate-50 */
+  --color-surface-base:        #ffffff; /* White */
+  --color-surface-elevated:    #f1f5f9; /* Slate-100 */
+  --color-surface-subtle:      #e2e8f0; /* Slate-200 */
 
-  /* Bordes Skeleton (1px rígido sin sombras difusas) */
-  --color-border-muted:        #252b36;
-  --color-border-subtle:       #1a1f28;
-  --color-border-focus:        #353d4c;
+  /* Bordes 1px rigidos */
+  --color-border-muted:        #e2e8f0; /* Slate-200 */
+  --color-border-subtle:       #cbd5e1; /* Slate-300 */
+  --color-border-focus:        #94a3b8; /* Slate-400 */
 
-  /* Acento Único Corporativo (Verde Pino Institucional / Steel Pine) */
-  --color-accent-primary:      #1e7e5d;
-  --color-accent-hover:        #25966f;
-  --color-accent-subtle:       rgba(30, 126, 93, 0.12);
-  --color-accent-border:       rgba(30, 126, 93, 0.35);
+  /* Acento Unico Corporativo */
+  --color-accent-primary:      #059669; /* Emerald-600 */
+  --color-accent-hover:        #047857; /* Emerald-700 */
+  --color-accent-subtle:       rgba(5, 150, 105, 0.08);
+  --color-accent-border:       rgba(5, 150, 105, 0.25);
   --color-accent-contrast:     #ffffff;
 
-  /* Tipografía y Contraste WCAG (Ratio > 4.5:1 texto regular, > 3:1 texto grande) */
-  --color-text-primary:        #f0f2f5; /* Contraste 14.8:1 sobre base */
-  --color-text-secondary:      #9aa1b0; /* Contraste 5.5:1 sobre base */
-  --color-text-muted:          #636b7b; /* Contraste 3.2:1 texto auxiliar/meta */
+  /* Tipografia y Contraste WCAG */
+  --color-text-primary:        #0f172a; /* Slate-900 */
+  --color-text-secondary:      #475569; /* Slate-600 */
+  --color-text-muted:          #64748b; /* Slate-500 */
 
-  /* Estados Funcionales (Siempre acompañados de icono y etiqueta textual) */
-  --color-status-success:      #27996c;
-  --color-status-success-bg:   rgba(39, 153, 108, 0.10);
-  --color-status-success-br:   rgba(39, 153, 108, 0.28);
+  /* Estados Funcionales */
+  --color-status-success:      #059669;
+  --color-status-success-bg:   #ecfdf5;
+  --color-status-success-br:   #a7f3d0;
 
-  --color-status-warning:      #c78328;
-  --color-status-warning-bg:   rgba(199, 131, 40, 0.10);
-  --color-status-warning-br:   rgba(199, 131, 40, 0.28);
+  --color-status-warning:      #d97706;
+  --color-status-warning-bg:   #fffbeb;
+  --color-status-warning-br:   #fde68a;
 
-  --color-status-danger:       #be3d3d;
-  --color-status-danger-bg:    rgba(190, 61, 61, 0.10);
-  --color-status-danger-br:    rgba(190, 61, 61, 0.28);
+  --color-status-danger:       #e11d48;
+  --color-status-danger-bg:    #fff1f2;
+  --color-status-danger-br:    #fecdd3;
 
-  /* Tipografías */
+  /* Tipografias */
   --font-family-ui:            "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-mono:          "JetBrains Mono", Consolas, "Liberation Mono", monospace;
 
-  /* Escala de Espaciado Estricta (Múltiplos de 8px) */
+  /* Escala de Espaciado Estricta */
   --space-8:   8px;
   --space-16:  16px;
   --space-24:  24px;
@@ -55,11 +56,44 @@
   --space-48:  48px;
 
   /* Dimensiones Estructurales */
-  --sidebar-width: 220px;
-  --topbar-height: 48px;
+  --sidebar-width: 264px;
+  --topbar-height: 56px;
   --telemetry-bar-height: 34px;
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+}
+
+.dark {
+  /* Paleta Base Dark Mode */
+  --color-background-base:     #0f172a; /* Slate-900 */
+  --color-surface-base:        #1e293b; /* Slate-800 */
+  --color-surface-elevated:    #334155; /* Slate-700 */
+  --color-surface-subtle:      #1e293b;
+
+  --color-border-muted:        #334155; /* Slate-700 */
+  --color-border-subtle:       #1e293b;
+  --color-border-focus:        #475569;
+
+  --color-accent-primary:      #10b981;
+  --color-accent-hover:        #059669;
+  --color-accent-subtle:       rgba(16, 185, 129, 0.12);
+  --color-accent-border:       rgba(16, 185, 129, 0.35);
+
+  --color-text-primary:        #f8fafc; /* Slate-50 */
+  --color-text-secondary:      #cbd5e1; /* Slate-300 */
+  --color-text-muted:          #94a3b8; /* Slate-400 */
+
+  --color-status-success:      #10b981;
+  --color-status-success-bg:   rgba(16, 185, 129, 0.12);
+  --color-status-success-br:   rgba(16, 185, 129, 0.3);
+
+  --color-status-warning:      #f59e0b;
+  --color-status-warning-bg:   rgba(245, 158, 11, 0.12);
+  --color-status-warning-br:   rgba(245, 158, 11, 0.3);
+
+  --color-status-danger:       #f43f5e;
+  --color-status-danger-bg:    rgba(244, 63, 94, 0.12);
+  --color-status-danger-br:    rgba(244, 63, 94, 0.3);
 }
 
 /* ==========================================================================
@@ -467,23 +501,26 @@ code, kbd, samp, pre {
 
 /* ==========================================================================
    CONSOLA TÃCTIL FÃSICA DE KPIS (Dark Neumorphism & Skeuomorphic Metal)
+   =====================================================================/* ==========================================================================
+   CONSOLA TÁCTIL FÍSICA DE KPIS — MODO CLARO (Brushed Platinum & Precision Metal)
    ========================================================================== */
 
-/* Chasis Envolvente de Acero Oscuro con Edge Lighting Cian/Teal */
+/* Chasis Envolvente en Modo Claro: Acero Platino Cepillado con Edge Lighting Sutil */
 .kpi-console-chassis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-16);
   padding: 14px;
-  background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.45) 0%, transparent 75%),
-              linear-gradient(180deg, #1e242c 0%, #14181f 45%, #0d1015 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.95) 0%, transparent 75%),
+              linear-gradient(180deg, #f8fafc 0%, #edf2f7 45%, #e2e8f0 100%);
+  border: 1px solid rgba(148, 163, 184, 0.55);
   border-radius: 16px;
   box-shadow: 
-    0 24px 48px -12px rgba(0, 0, 0, 0.9),
-    inset 0 1px 1px rgba(255, 255, 255, 0.25),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.8),
-    0 0 32px -4px rgba(20, 184, 166, 0.15);
+    0 16px 32px -8px rgba(15, 23, 42, 0.1),
+    0 4px 12px -2px rgba(15, 23, 42, 0.05),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 4px rgba(148, 163, 184, 0.35),
+    0 0 24px -4px rgba(16, 185, 129, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -495,11 +532,11 @@ code, kbd, samp, pre {
   left: 5%;
   right: 5%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.45) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.55) 50%, transparent 100%);
   pointer-events: none;
 }
 
-/* MÃ³dulo TÃ¡ctil Base (Cartucho Extruido) */
+/* Módulo Táctil Base */
 .kpi-tactile-module {
   position: relative;
   display: flex;
@@ -518,14 +555,14 @@ code, kbd, samp, pre {
   transform: translateY(-2px);
 }
 
-/* Remaches / Tornillos MetÃ¡licos Hexagonales en las Esquinas */
+/* Remaches Metálicos en Modo Claro (Cromado Pulido) */
 .kpi-rivet {
   position: absolute;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #94a3b8 20%, #475569 65%, #0f172a 100%);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9);
+  background: radial-gradient(circle at 35% 35%, #ffffff 25%, #cbd5e1 65%, #94a3b8 100%);
+  box-shadow: inset 0 1px 1px #ffffff, 0 1px 2px rgba(15, 23, 42, 0.3);
   pointer-events: none;
   z-index: 2;
 }
@@ -537,7 +574,7 @@ code, kbd, samp, pre {
   left: 15%;
   width: 70%;
   height: 1px;
-  background: #090d14;
+  background: #64748b;
   transform: translateY(-50%) rotate(45deg);
 }
 
@@ -546,101 +583,85 @@ code, kbd, samp, pre {
 .kpi-rivet--bl { bottom: 6px; left: 6px; }
 .kpi-rivet--br { bottom: 6px; right: 6px; }
 
-/* -------------------------------------------------------------
-   MATERIALES Y ACABADOS METÃLICOS (Gradients & Deep Inset Shadows)
-   ------------------------------------------------------------- */
-
-/* MÃ³dulo 1: Titanio y Acero Pulido (Gris Plata) */
+/* Módulos Táctiles en Modo Claro */
 .kpi-tactile-module--titanium {
   background: 
-    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
-    linear-gradient(145deg, #38414d 0%, #252c36 28%, #191e25 60%, #2c3440 85%, #1d232b 100%);
-  border: 1px solid rgba(203, 213, 225, 0.38);
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.95) 0%, transparent 60%),
+    linear-gradient(145deg, #ffffff 0%, #f8fafc 35%, #edf2f7 75%, #e2e8f0 100%);
+  border: 1px solid rgba(148, 163, 184, 0.6);
   box-shadow: 
-    0 12px 28px -6px rgba(0, 0, 0, 0.85),
-    inset 0 2px 2px rgba(255, 255, 255, 0.32),
-    inset 0 -3px 4px rgba(0, 0, 0, 0.9),
-    inset 1px 0 2px rgba(255, 255, 255, 0.12),
-    0 0 22px -3px rgba(148, 163, 184, 0.22);
+    0 6px 16px -3px rgba(15, 23, 42, 0.08),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 3px rgba(148, 163, 184, 0.25),
+    0 0 16px -2px rgba(148, 163, 184, 0.15);
 }
 
 .kpi-tactile-module--titanium:hover {
   box-shadow: 
-    0 16px 34px -6px rgba(0, 0, 0, 0.9),
-    inset 0 2px 3px rgba(255, 255, 255, 0.45),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.95),
-    0 0 28px 0 rgba(148, 163, 184, 0.35);
+    0 10px 22px -4px rgba(15, 23, 42, 0.12),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 4px rgba(148, 163, 184, 0.35);
 }
 
-/* MÃ³dulo 2: Esmeralda Pulido (Verde Joya con Edge Lighting Intenso) */
 .kpi-tactile-module--emerald {
   background: 
-    radial-gradient(circle at 15% 15%, rgba(52, 211, 153, 0.25) 0%, transparent 60%),
-    linear-gradient(145deg, #0a4f3a 0%, #06392a 28%, #03231a 60%, #0b553e 85%, #052c20 100%);
-  border: 1px solid rgba(52, 211, 153, 0.55);
+    radial-gradient(circle at 15% 15%, rgba(167, 243, 208, 0.5) 0%, transparent 60%),
+    linear-gradient(145deg, #ffffff 0%, #f0fdf4 35%, #ecfdf5 75%, #d1fae5 100%);
+  border: 1px solid rgba(16, 185, 129, 0.5);
   box-shadow: 
-    0 12px 28px -6px rgba(0, 0, 0, 0.9),
-    inset 0 2px 3px rgba(110, 231, 183, 0.52),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
-    inset 1px 0 2px rgba(52, 211, 153, 0.25),
-    0 8px 30px -4px rgba(16, 185, 129, 0.45);
+    0 6px 16px -3px rgba(5, 150, 105, 0.15),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 3px rgba(16, 185, 129, 0.2),
+    0 0 20px -2px rgba(16, 185, 129, 0.18);
 }
 
 .kpi-tactile-module--emerald:hover {
   box-shadow: 
-    0 16px 36px -6px rgba(0, 0, 0, 0.95),
-    inset 0 2px 4px rgba(110, 231, 183, 0.65),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
-    0 10px 38px 0 rgba(16, 185, 129, 0.65);
+    0 10px 22px -4px rgba(5, 150, 105, 0.22),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 4px rgba(16, 185, 129, 0.3),
+    0 0 24px -2px rgba(16, 185, 129, 0.25);
 }
 
-/* MÃ³dulo 3: Zafiro Profundo (Azul Institucional) */
 .kpi-tactile-module--sapphire {
   background: 
-    radial-gradient(circle at 15% 15%, rgba(96, 165, 250, 0.22) 0%, transparent 60%),
-    linear-gradient(145deg, #103b6d 0%, #0b2a4f 28%, #051b34 60%, #12437c 85%, #08213f 100%);
-  border: 1px solid rgba(96, 165, 250, 0.52);
+    radial-gradient(circle at 15% 15%, rgba(191, 219, 254, 0.5) 0%, transparent 60%),
+    linear-gradient(145deg, #ffffff 0%, #f0f9ff 35%, #eff6ff 75%, #dbeafe 100%);
+  border: 1px solid rgba(37, 99, 235, 0.42);
   box-shadow: 
-    0 12px 28px -6px rgba(0, 0, 0, 0.9),
-    inset 0 2px 3px rgba(147, 197, 253, 0.5),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
-    inset 1px 0 2px rgba(96, 165, 250, 0.22),
-    0 8px 30px -4px rgba(37, 99, 235, 0.42);
+    0 6px 16px -3px rgba(37, 99, 235, 0.12),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 3px rgba(37, 99, 235, 0.18),
+    0 0 20px -2px rgba(37, 99, 235, 0.15);
 }
 
 .kpi-tactile-module--sapphire:hover {
   box-shadow: 
-    0 16px 36px -6px rgba(0, 0, 0, 0.95),
-    inset 0 2px 4px rgba(147, 197, 253, 0.65),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
-    0 10px 38px 0 rgba(37, 99, 235, 0.62);
+    0 10px 22px -4px rgba(37, 99, 235, 0.2),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 4px rgba(37, 99, 235, 0.25);
 }
 
-/* MÃ³dulo 4: LatÃ³n y Ãmbar CÃ¡lido (Oro MetÃ¡lico / Alerta) */
 .kpi-tactile-module--brass {
   background: 
-    radial-gradient(circle at 15% 15%, rgba(251, 191, 36, 0.22) 0%, transparent 60%),
-    linear-gradient(145deg, #61420a 0%, #462f06 28%, #2c1d03 60%, #68470c 85%, #382504 100%);
-  border: 1px solid rgba(251, 191, 36, 0.52);
+    radial-gradient(circle at 15% 15%, rgba(254, 243, 199, 0.5) 0%, transparent 60%),
+    linear-gradient(145deg, #ffffff 0%, #fffbeb 35%, #fef3c7 75%, #fde68a 100%);
+  border: 1px solid rgba(217, 119, 6, 0.42);
   box-shadow: 
-    0 12px 28px -6px rgba(0, 0, 0, 0.9),
-    inset 0 2px 3px rgba(253, 230, 138, 0.5),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
-    inset 1px 0 2px rgba(251, 191, 36, 0.22),
-    0 8px 30px -4px rgba(217, 119, 6, 0.42);
+    0 6px 16px -3px rgba(217, 119, 6, 0.12),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 3px rgba(217, 119, 6, 0.18),
+    0 0 20px -2px rgba(217, 119, 6, 0.15);
 }
 
 .kpi-tactile-module--brass:hover {
   box-shadow: 
-    0 16px 36px -6px rgba(0, 0, 0, 0.95),
-    inset 0 2px 4px rgba(253, 230, 138, 0.65),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
-    0 10px 38px 0 rgba(217, 119, 6, 0.62);
+    0 10px 22px -4px rgba(217, 119, 6, 0.2),
+    inset 0 1px 2px #ffffff,
+    inset 0 -2px 4px rgba(217, 119, 6, 0.25);
 }
 
-/* -------------------------------------------------------------
-   ICONOGRAFÃA GRABADA EN PROFUNDIDAD (Debossed Well & Filters)
-   ------------------------------------------------------------- */
+/* Iconografía Grabada en Modo Claro */
 .kpi-tactile__icon-cluster {
   flex-shrink: 0;
   display: flex;
@@ -649,36 +670,34 @@ code, kbd, samp, pre {
   width: 52px;
   height: 52px;
   border-radius: 10px;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.35) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #edf2f7 100%);
+  border: 1px solid rgba(148, 163, 184, 0.4);
   box-shadow: 
-    inset 0 3px 6px rgba(0, 0, 0, 0.9),
-    0 1px 1px rgba(255, 255, 255, 0.2);
+    inset 0 2px 4px rgba(15, 23, 42, 0.08),
+    0 1px 1px #ffffff;
 }
 
 .kpi-tactile-module--titanium .kpi-tactile__icon-cluster svg {
-  color: #cbd5e1;
-  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.25)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95));
+  color: #334155;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.8));
 }
 
 .kpi-tactile-module--emerald .kpi-tactile__icon-cluster svg {
-  color: #34d399;
-  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(52, 211, 153, 0.6));
+  color: #059669;
+  filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.45));
 }
 
 .kpi-tactile-module--sapphire .kpi-tactile__icon-cluster svg {
-  color: #60a5fa;
-  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(96, 165, 250, 0.6));
+  color: #2563eb;
+  filter: drop-shadow(0 0 3px rgba(37, 99, 235, 0.4));
 }
 
 .kpi-tactile-module--brass .kpi-tactile__icon-cluster svg {
-  color: #fbbf24;
-  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+  color: #d97706;
+  filter: drop-shadow(0 0 3px rgba(217, 119, 6, 0.4));
 }
 
-/* -------------------------------------------------------------
-   CONTENIDO, CIFRAS BISELADAS Y JERARQUÃA
-   ------------------------------------------------------------- */
+/* Contenido y Cifras en Modo Claro */
 .kpi-tactile__content {
   flex: 1;
   display: flex;
@@ -692,8 +711,8 @@ code, kbd, samp, pre {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.7);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  color: #475569;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
   margin-bottom: 2px;
 }
 
@@ -705,7 +724,6 @@ code, kbd, samp, pre {
   margin: 2px 0 4px 0;
 }
 
-/* Cifras con Micro-Bisel MetÃ¡lico y Debossed Effect */
 .kpi-tactile__val {
   font-size: 2.3rem;
   font-weight: 800;
@@ -715,52 +733,248 @@ code, kbd, samp, pre {
 }
 
 .kpi-tactile__val--titanium {
+  background: linear-gradient(180deg, #0f172a 0%, #334155 70%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9));
+}
+
+.kpi-tactile__val--emerald {
+  background: linear-gradient(180deg, #047857 0%, #059669 65%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9));
+}
+
+.kpi-tactile__val--sapphire {
+  background: linear-gradient(180deg, #1d4ed8 0%, #2563eb 65%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9));
+}
+
+.kpi-tactile__val--brass {
+  background: linear-gradient(180deg, #b45309 0%, #d97706 65%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9));
+}
+
+.kpi-tactile__val--danger {
+  background: linear-gradient(180deg, #b91c1c 0%, #dc2626 65%, #ef4444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9));
+}
+
+.kpi-tactile__sparkline-container {
+  display: flex;
+  align-items: flex-end;
+  padding: 2px 4px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 1px #ffffff;
+}
+
+.kpi-tactile__footer {
+  font-size: 0.67rem;
+  font-weight: 500;
+  color: #64748b;
+  text-shadow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   CONSOLA TÁCTIL EN DARK MODE (Estricto Neumorfismo de Metal y Titanio Oscuro)
+   Preservado 100% idéntico para Eduardo
+   ========================================================================== */
+
+.dark .kpi-console-chassis {
+  background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.45) 0%, transparent 75%),
+              linear-gradient(180deg, #1e242c 0%, #14181f 45%, #0d1015 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 24px 48px -12px rgba(0, 0, 0, 0.9),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8),
+    0 0 32px -4px rgba(20, 184, 166, 0.15);
+}
+
+.dark .kpi-console-chassis::before {
+  background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.45) 50%, transparent 100%);
+}
+
+.dark .kpi-rivet {
+  background: radial-gradient(circle at 35% 35%, #94a3b8 20%, #475569 65%, #0f172a 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.dark .kpi-rivet::after {
+  background: #090d14;
+}
+
+.dark .kpi-tactile-module--titanium {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
+    linear-gradient(145deg, #38414d 0%, #252c36 28%, #191e25 60%, #2c3440 85%, #1d232b 100%);
+  border: 1px solid rgba(203, 213, 225, 0.38);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.85),
+    inset 0 2px 2px rgba(255, 255, 255, 0.32),
+    inset 0 -3px 4px rgba(0, 0, 0, 0.9),
+    inset 1px 0 2px rgba(255, 255, 255, 0.12),
+    0 0 22px -3px rgba(148, 163, 184, 0.22);
+}
+
+.dark .kpi-tactile-module--titanium:hover {
+  box-shadow: 
+    0 16px 34px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.95),
+    0 0 28px 0 rgba(148, 163, 184, 0.35);
+}
+
+.dark .kpi-tactile-module--emerald {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(52, 211, 153, 0.25) 0%, transparent 60%),
+    linear-gradient(145deg, #0a4f3a 0%, #06392a 28%, #03231a 60%, #0b553e 85%, #052c20 100%);
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(110, 231, 183, 0.52),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(52, 211, 153, 0.25),
+    0 8px 30px -4px rgba(16, 185, 129, 0.45);
+}
+
+.dark .kpi-tactile-module--emerald:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(110, 231, 183, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(16, 185, 129, 0.65);
+}
+
+.dark .kpi-tactile-module--sapphire {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(96, 165, 250, 0.22) 0%, transparent 60%),
+    linear-gradient(145deg, #103b6d 0%, #0b2a4f 28%, #051b34 60%, #12437c 85%, #08213f 100%);
+  border: 1px solid rgba(96, 165, 250, 0.52);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(147, 197, 253, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(96, 165, 250, 0.22),
+    0 8px 30px -4px rgba(37, 99, 235, 0.42);
+}
+
+.dark .kpi-tactile-module--sapphire:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(147, 197, 253, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(37, 99, 235, 0.62);
+}
+
+.dark .kpi-tactile-module--brass {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(251, 191, 36, 0.22) 0%, transparent 60%),
+    linear-gradient(145deg, #61420a 0%, #462f06 28%, #2c1d03 60%, #68470c 85%, #382504 100%);
+  border: 1px solid rgba(251, 191, 36, 0.52);
+  box-shadow: 
+    0 12px 28px -6px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(253, 230, 138, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.92),
+    inset 1px 0 2px rgba(251, 191, 36, 0.22),
+    0 8px 30px -4px rgba(217, 119, 6, 0.42);
+}
+
+.dark .kpi-tactile-module--brass:hover {
+  box-shadow: 
+    0 16px 36px -6px rgba(0, 0, 0, 0.95),
+    inset 0 2px 4px rgba(253, 230, 138, 0.65),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.98),
+    0 10px 38px 0 rgba(217, 119, 6, 0.62);
+}
+
+.dark .kpi-tactile__icon-cluster {
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.35) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 3px 6px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.dark .kpi-tactile-module--titanium .kpi-tactile__icon-cluster svg {
+  color: #cbd5e1;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.25)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95));
+}
+
+.dark .kpi-tactile-module--emerald .kpi-tactile__icon-cluster svg {
+  color: #34d399;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(52, 211, 153, 0.6));
+}
+
+.dark .kpi-tactile-module--sapphire .kpi-tactile__icon-cluster svg {
+  color: #60a5fa;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(96, 165, 250, 0.6));
+}
+
+.dark .kpi-tactile-module--brass .kpi-tactile__icon-cluster svg {
+  color: #fbbf24;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.3)) drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+}
+
+.dark .kpi-tactile__label {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.dark .kpi-tactile__val--titanium {
   background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 45%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9)) drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.45));
 }
 
-.kpi-tactile__val--emerald {
+.dark .kpi-tactile__val--emerald {
   background: linear-gradient(180deg, #d1fae5 0%, #34d399 45%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(16, 185, 129, 0.7));
 }
 
-.kpi-tactile__val--sapphire {
+.dark .kpi-tactile__val--sapphire {
   background: linear-gradient(180deg, #dbeafe 0%, #60a5fa 45%, #2563eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(37, 99, 235, 0.7));
 }
 
-.kpi-tactile__val--brass {
+.dark .kpi-tactile__val--brass {
   background: linear-gradient(180deg, #fef3c7 0%, #f59e0b 45%, #d97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(245, 158, 11, 0.7));
 }
 
-.kpi-tactile__val--danger {
+.dark .kpi-tactile__val--danger {
   background: linear-gradient(180deg, #fecaca 0%, #ef4444 45%, #b91c1c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(239, 68, 68, 0.7));
 }
 
-/* Sparkline Integrada con Micro-CuadrÃ­cula */
-.kpi-tactile__sparkline-container {
-  display: flex;
-  align-items: flex-end;
-  padding: 2px 4px;
-  border-radius: 6px;
+.dark .kpi-tactile__sparkline-container {
   background: rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(52, 211, 153, 0.3);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.kpi-tactile__footer {
+.dark .kpi-tactile__footer {
   font-size: 0.67rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
@@ -1167,9 +1381,15 @@ code, kbd, samp, pre {
    ========================================================================== */
 .arch-grid-layout {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 380px;
   gap: var(--space-24);
   align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .arch-grid-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .arch-panel {
@@ -2545,3 +2765,5 @@ code, kbd, samp, pre {
   from { opacity: 0; transform: scale(0.99); }
   to { opacity: 1; transform: scale(1); }
 }
+
+

@@ -27,6 +27,27 @@ export function AppShell() {
   const [logs,       setLogs]       = useState([]);
   const [toast,      setToast]      = useState(null);
 
+  // Gestión de Tema Dual (Tema Claro por Defecto)
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("librosync-theme") || "light";
+  });
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("librosync-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
+  }, []);
+
+  // Health Check Dinámico de Microservicios
+  const [apiHealth, setApiHealth] = useState({ catalogo: true, prestamos: true });
+
   const addLog = useCallback((tag, texto, tipo = "info") => {
     const hora = new Date().toLocaleTimeString("es-SV", { hour12: false });
     setLogs(prev => [{ id: Date.now() + Math.random(), hora, tag, texto, tipo }, ...prev.slice(0, 49)]);
@@ -39,18 +60,35 @@ export function AppShell() {
   const cargarLibros = useCallback(async () => {
     addLog("Catalogo.Api", "GET /libros?pagina=1&tamanio=50 → sp_ObtenerCatalogoLibros", "sql");
     const res = await get("catalogo", "/libros?pagina=1&tamanio=50");
-    if (res.ok) setLibros(res.data);
+    if (res.ok) {
+      setLibros(res.data);
+      setApiHealth(prev => ({ ...prev, catalogo: true }));
+    } else {
+      setApiHealth(prev => ({ ...prev, catalogo: false }));
+    }
   }, [get, addLog]);
 
   const cargarPrestamos = useCallback(async () => {
     addLog("Prestamos.Api", "GET /prestamos/activos → sp_ListarPrestamosActivos", "sql");
     const res = await get("prestamos", "/prestamos/activos");
-    if (res.ok) setPrestamos(res.data);
+    if (res.ok) {
+      setPrestamos(res.data);
+      setApiHealth(prev => ({ ...prev, prestamos: true }));
+    } else {
+      setApiHealth(prev => ({ ...prev, prestamos: false }));
+    }
   }, [get, addLog]);
 
   useEffect(() => {
     cargarLibros();
     cargarPrestamos();
+
+    // Heartbeat periódico cada 25 segundos para monitoreo en vivo de APIs
+    const timer = setInterval(() => {
+      cargarLibros();
+      cargarPrestamos();
+    }, 25000);
+    return () => clearInterval(timer);
   }, [cargarLibros, cargarPrestamos]);
 
   const handleSolicitarPrestamo = useCallback(async (libro, form) => {
@@ -72,7 +110,26 @@ export function AppShell() {
     }
   }, [post, addLog, cargarLibros, cargarPrestamos, showToast]);
 
+  // Gestión de Estado Optimista (Optimistic UI) al Asentar Devolución
   const handleDevolucion = useCallback(async (prestamoId) => {
+    // 1. Mutación optimista en el arreglo local de préstamos
+    setPrestamos(prev => prev.map(p => 
+      p.id === prestamoId 
+        ? { ...p, estado: "Devuelto", fechaDevolucionReal: new Date().toISOString() } 
+        : p
+    ));
+
+    // 2. Incremento optimista de stock disponible en el catálogo
+    setLibros(prev => {
+      const targetP = prestamos.find(p => p.id === prestamoId);
+      if (!targetP) return prev;
+      return prev.map(l => 
+        l.id === targetP.libroId 
+          ? { ...l, stockDisponible: Math.min(l.stockTotal, (l.stockDisponible || 0) + 1) } 
+          : l
+      );
+    });
+
     addLog("Prestamos.Api", `PUT /prestamos/${prestamoId}/devolver → sp_FinalizarDevolucion`, "sql");
     const res = await put("prestamos", `/prestamos/${prestamoId}/devolver`);
     if (res.ok) {
@@ -82,8 +139,10 @@ export function AppShell() {
       await cargarPrestamos();
     } else {
       showToast(res.mensaje || "Error al registrar devolución.", "error");
+      await cargarPrestamos();
+      await cargarLibros();
     }
-  }, [put, addLog, cargarLibros, cargarPrestamos, showToast]);
+  }, [put, addLog, cargarLibros, cargarPrestamos, showToast, prestamos]);
 
   const view = VIEW_TITLES[activeView] || VIEW_TITLES.dashboard;
 
@@ -105,14 +164,20 @@ export function AppShell() {
   };
 
   return (
-    <div className="app-shell">
-      <Sidebar activeView={activeView} onNav={setActiveView} />
-      <div className="app-shell__main">
-        <TopBar titulo={view.titulo} subtitulo={view.subtitulo} />
-        <main className="app-shell__content">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 transition-colors">
+      <Sidebar activeView={activeView} onNav={setActiveView} theme={theme} apiHealth={apiHealth} />
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <TopBar 
+          titulo={view.titulo} 
+          subtitulo={view.subtitulo} 
+          apiHealth={apiHealth}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+        <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B1120] transition-colors">
           {renderView()}
         </main>
-        {/* Telemetría y Trazas Técnicas: Solo visibles para perfil Bibliotecario / Admin */}
+        {/* Telemetría Docked: Solo visible para Administrador / Bibliotecario */}
         {usuario?.rol === "bibliotecario" && (
           <TelemetryConsole logs={logs} onClear={() => setLogs([])} />
         )}

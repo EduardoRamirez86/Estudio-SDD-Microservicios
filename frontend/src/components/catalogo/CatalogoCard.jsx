@@ -3,30 +3,31 @@ import React from "react";
 /**
  * CatalogoCard - Ficha Bibliográfica con Separación Arquitectónica (Digital vs. Físico)
  * 
- * Separa claramente dos vías de acceso independientes para el mismo título:
- * - Sección Digital: Lectura en línea ilimitada (botón ghost sobrio sin neón).
- * - Sección Física: Control de inventario en bodega (ejemplares) y emisión/solicitud.
+ * Sincronizada con el sistema Luxury Material Technology:
+ * - Sección Digital: Lectura en línea ilimitada con botón estructurado y accesible.
+ * - Sección Física: Control de inventario en bodega (ejemplares físicos) y emisión formal.
  */
 export function CatalogoCard({ libro, onLeerDigital, onSolicitarFisico, esBibliotecario }) {
   const stockTotal = libro.stockTotal || 0;
   const stockDisponible = libro.stockDisponible || 0;
   const agotado = stockDisponible <= 0;
   const pct = stockTotal > 0 ? (stockDisponible / stockTotal) * 100 : 0;
+  const tituloLimpio = libro.titulo ? libro.titulo.replace(/Anios/g, "Años") : "Obra sin título";
 
   return (
-    <article className="book-card" aria-label={`Ficha: ${libro.titulo}`}>
+    <article className="book-card" aria-label={`Ficha: ${tituloLimpio}`}>
       {/* Metadatos superiores de catalogación */}
       <div className="book-card__top">
         <span className="book-card__cat">
-          {libro.categoriaId ? `DEWEY-CAT-${libro.categoriaId}` : "FONDO GENERAL"}
+          {libro.categoriaNombre ? libro.categoriaNombre.toUpperCase() : libro.categoriaId ? `DEWEY-CAT-${libro.categoriaId}` : "FONDO GENERAL"}
         </span>
         <code className="book-card__isbn">ISBN {libro.isbn || "N/A"}</code>
       </div>
 
       {/* Datos Bibliográficos Principales */}
       <div className="book-card__body">
-        <h3 className="book-card__title">{libro.titulo}</h3>
-        <p className="book-card__author">{libro.autorNombre || "Autor Institucional / Sin registrar"}</p>
+        <h3 className="book-card__title" title={tituloLimpio}>{tituloLimpio}</h3>
+        <p className="book-card__author">{libro.autorNombre || libro.autor || "Autor institucional / Sin registrar"}</p>
       </div>
 
       {/* Contenedor de Formatos de Acceso Independientes */}
@@ -49,13 +50,23 @@ export function CatalogoCard({ libro, onLeerDigital, onSolicitarFisico, esBiblio
             className="btn-read-online"
             onClick={() => onLeerDigital(libro)}
             id={`btn-digital-${libro.id}`}
-            title={`Leer ${libro.titulo} en formato digital`}
+            title={`Leer ${tituloLimpio} en formato digital`}
+            style={{
+              backgroundColor: "var(--color-surface-elevated)",
+              border: "1px solid var(--color-border-subtle)",
+              color: "var(--color-text-primary)",
+              fontWeight: 600,
+              borderRadius: "6px",
+              padding: "7px 12px",
+              cursor: "pointer",
+              transition: "all 0.15s ease"
+            }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
             </svg>
-            <span>Leer en línea</span>
+            <span>Lectura Digital</span>
           </button>
         </div>
 
@@ -74,7 +85,10 @@ export function CatalogoCard({ libro, onLeerDigital, onSolicitarFisico, esBiblio
             </span>
             <span 
               className="book-format-stock"
-              style={{ color: agotado ? "var(--color-status-danger)" : "var(--color-text-secondary)" }}
+              style={{ 
+                color: agotado ? "var(--color-status-danger, #ef4444)" : "var(--color-text-primary)",
+                fontWeight: 600
+              }}
             >
               {stockDisponible} de {stockTotal} ejemplares
             </span>
@@ -88,10 +102,24 @@ export function CatalogoCard({ libro, onLeerDigital, onSolicitarFisico, esBiblio
           </div>
 
           <button
+            type="button"
             className={`book-card__action${agotado ? " book-card__action--disabled" : ""}`}
             disabled={agotado}
             onClick={() => !agotado && onSolicitarFisico(libro)}
             id={`btn-solicitar-${libro.id}`}
+            style={{
+              backgroundColor: agotado 
+                ? "var(--color-surface-elevated)" 
+                : "var(--color-accent-primary, #059669)",
+              color: agotado ? "var(--color-text-muted)" : "#ffffff",
+              border: agotado ? "1px solid var(--color-border-muted)" : "none",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              fontWeight: 600,
+              boxShadow: agotado ? "none" : "0 2px 6px rgba(5, 150, 105, 0.3)",
+              cursor: agotado ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease"
+            }}
           >
             {agotado ? (
               <>

@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 
@@ -7,11 +7,11 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
   const esBibliotecario = usuario?.rol === "bibliotecario";
   const [confirmDevolucion, setConfirmDevolucion] = useState(null);
 
-  // KPIs Operativos de alta prioridad
+  // KPIs Operativos de alta prioridad sincronizados
   const totalTitulos   = libros.length;
-  const disponibles    = libros.reduce((acc, l) => acc + (l.stockDisponible || 0), 0);
   const totalStock     = libros.reduce((acc, l) => acc + (l.stockTotal || 0), 0);
   const prestados      = prestamos.filter(p => p.estado === "Activo").length;
+  const disponibles    = Math.max(0, totalStock - prestados);
   
   const hoy = new Date();
   const vencidos = prestamos.filter(p => {
@@ -24,31 +24,61 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
     return p.estado === "Activo" && (d - hoy) / (1000 * 60 * 60 * 24) <= 3;
   }).length;
 
-  const getLibroTitulo = (id) => libros.find(l => l.id === id)?.titulo ?? `Obra #${id}`;
+  const getLibroTitulo = (id) => {
+    const l = libros.find(lib => lib.id === id);
+    if (!l) return `Obra #${id}`;
+    return l.titulo.replace(/Anios/g, "Años");
+  };
 
   const recientes = prestamos
     .filter(p => p.estado === "Activo")
     .slice(0, 5);
 
-  const porcentajeOcupacion = totalStock > 0 ? Math.round(((totalStock - disponibles) / totalStock) * 100) : 0;
+  const porcentajeOcupacion = totalStock > 0 ? Math.min(100, Math.round((prestados / totalStock) * 100)) : 0;
 
   if (!esBibliotecario) {
     // VISTA LECTOR — Foco en sus materiales en custodia
     return (
-      <div className="view-content">
-        <header className="dash-header">
+      <div className="view-content" style={{ padding: "24px 28px", maxWidth: "100%", boxSizing: "border-box" }}>
+        <header className="dash-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", paddingBottom: "16px" }}>
           <div>
             <h1 className="dash-header__user-title">Bienvenido, {usuario?.nombre}</h1>
             <p className="dash-header__meta">{usuario?.cargo} — {usuario?.institucion}</p>
           </div>
-          <button className="btn-primary" onClick={() => onNav?.("catalogo")}>
+          <button 
+            type="button"
+            className="btn-primary" 
+            onClick={() => onNav?.("catalogo")}
+            style={{
+              backgroundColor: "var(--color-accent-primary, #059669)",
+              color: "#ffffff",
+              fontWeight: 600,
+              padding: "9px 18px",
+              borderRadius: "6px",
+              boxShadow: "0 2px 6px rgba(5, 150, 105, 0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              transition: "all 0.15s ease"
+            }}
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Solicitar Nuevo Ejemplar
           </button>
         </header>
 
         {/* Consola Táctil Lector */}
-        <section className="kpi-console-chassis" aria-label="Indicadores de Custodia">
+        <section 
+          className="kpi-console-chassis" 
+          aria-label="Indicadores de Custodia"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+            gap: "16px",
+            width: "100%"
+          }}
+        >
           <div className="kpi-tactile-module kpi-tactile-module--titanium">
             <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
             <span className="kpi-rivet kpi-rivet--tr" aria-hidden="true" />
@@ -187,7 +217,20 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
           <div className="empty-state">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
             <p>No registra préstamos activos en su expediente.</p>
-            <button className="btn-secondary" onClick={() => onNav?.("catalogo")} style={{ marginTop: "8px" }}>
+            <button 
+              type="button"
+              className="btn-secondary" 
+              onClick={() => onNav?.("catalogo")} 
+              style={{ 
+                marginTop: "12px", 
+                backgroundColor: "var(--color-surface-elevated, #1e293b)",
+                borderColor: "var(--color-border-focus, #475569)",
+                color: "var(--color-text-primary, #f8fafc)",
+                fontWeight: 600,
+                padding: "8px 16px",
+                borderRadius: "6px"
+              }}
+            >
               Explorar Catálogo Institucional
             </button>
           </div>
@@ -198,20 +241,56 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
 
   // VISTA BIBLIOTECARIO — Mesa de Control Institucional
   return (
-    <div className="view-content">
+    <div className="view-content" style={{ padding: "24px 28px", maxWidth: "100%", boxSizing: "border-box" }}>
       {/* Header Operativo */}
-      <header className="dash-header">
+      <header className="dash-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", paddingBottom: "16px" }}>
         <div>
           <h1 className="dash-header__user-title">Mesa de Control de Préstamos</h1>
           <p className="dash-header__meta">
             Operador: <strong>{usuario?.nombre}</strong> — {usuario?.cargo} · {usuario?.institucion}
           </p>
         </div>
-        <div style={{ display: "flex", gap: "8px" }}>
-          <button className="btn-secondary" onClick={() => onNav?.("gestion")}>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+          <button 
+            type="button"
+            className="btn-secondary" 
+            onClick={() => onNav?.("gestion")}
+            style={{
+              backgroundColor: "var(--color-surface-elevated, #1e293b)",
+              border: "1px solid var(--color-border-focus, #475569)",
+              color: "var(--color-text-primary, #f8fafc)",
+              fontWeight: 600,
+              padding: "9px 16px",
+              borderRadius: "6px",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              transition: "all 0.15s ease"
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             Auditoría de Préstamos
           </button>
-          <button className="btn-primary" onClick={() => onNav?.("catalogo")}>
+          <button 
+            type="button"
+            className="btn-primary" 
+            onClick={() => onNav?.("catalogo")}
+            style={{
+              backgroundColor: "var(--color-accent-primary, #059669)",
+              color: "#ffffff",
+              fontWeight: 600,
+              padding: "9px 18px",
+              borderRadius: "6px",
+              boxShadow: "0 2px 6px rgba(5, 150, 105, 0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              transition: "all 0.15s ease"
+            }}
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Registrar Préstamo
           </button>
@@ -219,7 +298,16 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
       </header>
 
       {/* Consola Táctil Física de KPIs: Chasis de Titanio Oscuro y Módulos de Metales & Gemas */}
-      <section className="kpi-console-chassis" aria-label="Consola de Indicadores Clave de Desempeño">
+      <section 
+        className="kpi-console-chassis" 
+        aria-label="Consola de Indicadores Clave de Desempeño"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+          gap: "16px",
+          width: "100%"
+        }}
+      >
         {/* Módulo 1: Titanio Cepillado / Gris Plata */}
         <div className="kpi-tactile-module kpi-tactile-module--titanium">
           <span className="kpi-rivet kpi-rivet--tl" aria-hidden="true" />
@@ -357,36 +445,58 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
         </div>
       </section>
 
-      {/* Rejilla Estructural (7fr / 3fr) */}
-      <div className="dash-content-grid">
+      {/* Rejilla Estructural (7fr / 3fr adaptativa) */}
+      <div 
+        className="dash-content-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 7fr) minmax(310px, 3fr)",
+          gap: "24px",
+          alignItems: "start"
+        }}
+      >
         {/* Columna Principal: Préstamos Activos Recientes */}
         <section className="skeleton-card" aria-label="Préstamos Activos Recientes">
-          <div className="skeleton-card__header">
+          <div className="skeleton-card__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
             <span className="skeleton-card__title">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               Préstamos Activos Recientes
             </span>
-            <button className="btn-outline btn-outline--sm" onClick={() => onNav?.("gestion")}>
+            <button 
+              type="button"
+              className="btn-outline btn-outline--sm" 
+              onClick={() => onNav?.("gestion")}
+              style={{
+                backgroundColor: "var(--color-surface-elevated, #1e293b)",
+                borderColor: "var(--color-border-focus, #475569)",
+                color: "var(--color-text-secondary, #cbd5e1)",
+                fontWeight: 600,
+                padding: "6px 12px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                transition: "all 0.15s ease"
+              }}
+            >
               Ver Registro Completo ({prestados})
             </button>
           </div>
 
           <div style={{ padding: "0" }}>
             {recientes.length === 0 ? (
-              <div className="empty-state" style={{ padding: "32px 16px" }}>
-                <p>No se registran préstamos activos en este momento.</p>
+              <div className="empty-state" style={{ padding: "36px 16px", textAlign: "center" }}>
+                <p style={{ color: "var(--color-text-muted)" }}>No se registran préstamos activos en este momento.</p>
               </div>
             ) : (
               <div className="tbl-wrap" style={{ border: "none", borderRadius: "0" }}>
-                <table className="tbl">
+                <table className="tbl" style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr>
-                      <th>Folio</th>
-                      <th>Título de la Obra</th>
-                      <th>Beneficiario</th>
-                      <th>Límite Retorno</th>
-                      <th>Estado</th>
-                      {onDevolver && <th style={{ textAlign: "right" }}>Operación</th>}
+                      <th style={{ padding: "12px 16px" }}>Folio</th>
+                      <th style={{ padding: "12px 16px" }}>Título de la Obra</th>
+                      <th style={{ padding: "12px 16px" }}>Beneficiario</th>
+                      <th style={{ padding: "12px 16px" }}>Límite Retorno</th>
+                      <th style={{ padding: "12px 16px" }}>Estado</th>
+                      {onDevolver && <th style={{ textAlign: "right", padding: "12px 16px" }}>Operación</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -395,25 +505,52 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                       const esVencido = vence < hoy;
                       return (
                         <tr key={p.id} className={esVencido ? "tbl--warn" : ""}>
-                          <td className="td-id">#{String(p.id).padStart(4, "0")}</td>
-                          <td className="td-title">{getLibroTitulo(p.libroId)}</td>
-                          <td>{p.usuarioNombre}</td>
-                          <td style={{ color: esVencido ? "var(--color-status-danger)" : "var(--color-text-primary)", fontWeight: esVencido ? 600 : 400 }}>
+                          <td className="td-id" style={{ padding: "14px 16px" }}>
+                            <span style={{ fontFamily: "var(--font-family-mono)", color: "var(--color-text-secondary)" }}>
+                              #{String(p.id).padStart(4, "0")}
+                            </span>
+                          </td>
+                          <td className="td-title" style={{ padding: "14px 16px", fontWeight: 600 }}>
+                            {getLibroTitulo(p.libroId)}
+                          </td>
+                          <td style={{ padding: "14px 16px" }}>{p.usuarioNombre}</td>
+                          <td style={{ 
+                            padding: "14px 16px",
+                            color: esVencido ? "var(--color-status-danger, #ef4444)" : "var(--color-text-primary)", 
+                            fontWeight: esVencido ? 600 : 400 
+                          }}>
                             {vence.toLocaleDateString("es-SV")}
                           </td>
-                          <td>
+                          <td style={{ padding: "14px 16px" }}>
                             <span className={`chip chip--${esVencido ? "vencido" : "activo"}`}>
                               <span aria-hidden="true">{esVencido ? "⚠" : "✓"}</span>
                               {esVencido ? "VENCIDO" : "ACTIVO"}
                             </span>
                           </td>
                           {onDevolver && (
-                            <td style={{ textAlign: "right" }}>
+                            <td style={{ textAlign: "right", padding: "14px 16px" }}>
                               <button
+                                type="button"
                                 className="btn-outline btn-outline--sm"
                                 onClick={() => setConfirmDevolucion(p)}
                                 title="Finalizar préstamo e ingresar ejemplar a bodega"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "6px",
+                                  backgroundColor: "rgba(16, 185, 129, 0.12)",
+                                  border: "1px solid rgba(16, 185, 129, 0.45)",
+                                  color: "var(--color-accent-primary, #10b981)",
+                                  fontWeight: 600,
+                                  fontSize: "0.74rem",
+                                  padding: "6px 14px",
+                                  borderRadius: "6px",
+                                  boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
+                                  cursor: "pointer",
+                                  transition: "all 0.15s ease"
+                                }}
                               >
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                                 Asentar Devolución
                               </button>
                             </td>
@@ -430,19 +567,21 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
 
         {/* Columna Lateral: Estado del Acervo y Normativa */}
         <aside className="skeleton-card" aria-label="Resumen de Inventario y Operaciones">
-          <div className="skeleton-card__header">
+          <div className="skeleton-card__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
             <span className="skeleton-card__title">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               Resumen Operativo
             </span>
-            <span className="badge-count" style={{ fontSize: "0.62rem" }}>AUDITORIA ACTIVA</span>
+            <span className="badge-count" style={{ fontSize: "0.62rem", fontFamily: "var(--font-family-mono)", padding: "3px 7px", borderRadius: "4px", backgroundColor: "var(--color-surface-elevated, #334155)", color: "var(--color-text-secondary, #cbd5e1)" }}>
+              AUDITORÍA ACTIVA
+            </span>
           </div>
 
-          <div className="skeleton-card__body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {/* Grafica Circular Hueca (Radial Bar / Donut Chart con Anillos Concentricos) */}
+          <div className="skeleton-card__body" style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "18px" }}>
+            {/* Gráfica Circular Hueca (Radial Bar / Donut Chart con Anillos Concéntricos) */}
             <div className="donut-chart-container">
               <div className="donut-chart-wrapper">
-                <svg width="130" height="130" viewBox="0 0 130 130" className="donut-svg" aria-label="Grafica de ocupacion">
+                <svg width="130" height="130" viewBox="0 0 130 130" className="donut-svg" aria-label="Gráfica de ocupación">
                   <defs>
                     <linearGradient id="donutGradEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#6ee7b7" />
@@ -454,12 +593,12 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     </filter>
                   </defs>
 
-                  {/* Pistas de fondo en gris carbon neutro */}
-                  <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255, 255, 255, 0.06)" strokeWidth="6.5" />
-                  <circle cx="65" cy="65" r="39" fill="none" stroke="rgba(255, 255, 255, 0.04)" strokeWidth="4.5" />
-                  <circle cx="65" cy="65" r="29" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="3.5" />
+                  {/* Pistas de fondo adaptativas para Light y Dark mode */}
+                  <circle cx="65" cy="65" r="50" fill="none" stroke="currentColor" className="text-slate-200 dark:text-white/10" strokeWidth="6.5" />
+                  <circle cx="65" cy="65" r="39" fill="none" stroke="currentColor" className="text-slate-200/70 dark:text-white/5" strokeWidth="4.5" />
+                  <circle cx="65" cy="65" r="29" fill="none" stroke="currentColor" className="text-slate-200/50 dark:text-white/5" strokeWidth="3.5" />
 
-                  {/* Anillo exterior luminoso: Ocupacion de Acervo */}
+                  {/* Anillo exterior luminoso: Ocupación de Acervo */}
                   <circle
                     cx="65" cy="65" r="50"
                     fill="none"
@@ -481,9 +620,9 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     strokeDasharray={2 * Math.PI * 39}
                     strokeDashoffset={2 * Math.PI * 39 * (1 - (totalStock > 0 ? (disponibles / totalStock) * 0.75 : 0.5))}
                     transform="rotate(-90 65 65)"
-                    strokeOpacity="0.75"
+                    strokeOpacity="0.8"
                   />
-                  {/* Anillo interior: Rotacion de acervo en tono ambar */}
+                  {/* Anillo interior: Rotación de acervo en tono ámbar */}
                   <circle
                     cx="65" cy="65" r="29"
                     fill="none"
@@ -493,50 +632,59 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     strokeDasharray={2 * Math.PI * 29}
                     strokeDashoffset={2 * Math.PI * 29 * 0.65}
                     transform="rotate(-90 65 65)"
-                    strokeOpacity="0.65"
+                    strokeOpacity="0.75"
                   />
                 </svg>
 
-                {/* Lectura numerica central */}
+                {/* Lectura numérica central */}
                 <div className="donut-center-readout">
                   <span className="donut-center-val">{porcentajeOcupacion}%</span>
-                  <span className="donut-center-sub">OCUPACION</span>
+                  <span className="donut-center-sub">OCUPACIÓN</span>
                 </div>
               </div>
 
-              {/* Leyenda analitica a la derecha */}
+              {/* Leyenda analítica a la derecha con especificación explícita de Ejemplares */}
               <div className="donut-legend">
                 <div className="donut-legend-item">
                   <span className="donut-legend-dot donut-legend-dot--emerald" />
                   <div className="donut-legend-info">
                     <span className="donut-legend-label">Prestados</span>
-                    <strong className="donut-legend-val">{totalStock - disponibles} ej.</strong>
+                    <strong className="donut-legend-val">
+                      {prestados} {prestados === 1 ? "ejemplar prestado" : "ejemplares prestados"}
+                    </strong>
                   </div>
                 </div>
                 <div className="donut-legend-item">
                   <span className="donut-legend-dot donut-legend-dot--sapphire" />
                   <div className="donut-legend-info">
                     <span className="donut-legend-label">Disponibles</span>
-                    <strong className="donut-legend-val">{disponibles} ej.</strong>
+                    <strong className="donut-legend-val">
+                      {disponibles} {disponibles === 1 ? "ejemplar en bodega" : "ejemplares disponibles"}
+                    </strong>
                   </div>
                 </div>
                 <div className="donut-legend-item">
                   <span className="donut-legend-dot donut-legend-dot--amber" />
                   <div className="donut-legend-info">
                     <span className="donut-legend-label">Stock Total</span>
-                    <strong className="donut-legend-val">{totalStock} ej.</strong>
+                    <strong className="donut-legend-val">
+                      {totalStock} {totalStock === 1 ? "ejemplar catalogado" : "ejemplares en catálogo"}
+                    </strong>
                   </div>
                 </div>
+                <span style={{ fontSize: "0.63rem", color: "var(--color-text-muted)", marginTop: "3px", fontFamily: "var(--font-family-mono)" }}>
+                  * Ejemplar = Unidad física de libro
+                </span>
               </div>
             </div>
 
-            {/* Parametros de Custodia con Checkboxes de Validacion */}
+            {/* Parámetros de Custodia con Checkboxes de Validación */}
             <div className="custodia-section">
               <div className="custodia-section__title">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                <span>Parametros de Custodia</span>
+                <span>Parámetros de Custodia</span>
               </div>
 
               <div className="custodia-checklist">
@@ -547,8 +695,8 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     </svg>
                   </div>
                   <div className="custodia-check-text">
-                    <span className="custodia-check-title">Plazo estandar:</span>
-                    <span className="custodia-check-desc">7 a 15 dias habiles validados.</span>
+                    <span className="custodia-check-title">Plazo estándar:</span>
+                    <span className="custodia-check-desc">7 a 15 días hábiles validados.</span>
                   </div>
                 </div>
 
@@ -559,8 +707,8 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     </svg>
                   </div>
                   <div className="custodia-check-text">
-                    <span className="custodia-check-title">Limite por beneficiario:</span>
-                    <span className="custodia-check-desc">Maximo 3 ejemplares por solicitante.</span>
+                    <span className="custodia-check-title">Límite por beneficiario:</span>
+                    <span className="custodia-check-desc">Máximo 3 ejemplares por solicitante.</span>
                   </div>
                 </div>
 
@@ -571,7 +719,7 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
                     </svg>
                   </div>
                   <div className="custodia-check-text">
-                    <span className="custodia-check-title">Auditoria transaccional:</span>
+                    <span className="custodia-check-title">Auditoría transaccional:</span>
                     <span className="custodia-check-desc">Stored Procedures en SQL Server.</span>
                   </div>
                 </div>
@@ -590,13 +738,30 @@ export function DashboardView({ libros = [], prestamos = [], onNav, onDevolver }
               </div>
             </div>
 
-            <div style={{ borderTop: "1px solid var(--color-border-muted)", paddingTop: "12px" }}>
+            <div style={{ borderTop: "1px solid var(--color-border-muted)", paddingTop: "14px" }}>
               <button 
+                type="button"
                 className="btn-secondary" 
-                style={{ width: "100%", justifyContent: "center" }}
+                style={{ 
+                  width: "100%", 
+                  justifyContent: "center",
+                  backgroundColor: "var(--color-surface-elevated, #1e293b)",
+                  border: "1px solid var(--color-border-focus, #475569)",
+                  color: "var(--color-text-primary, #f8fafc)",
+                  fontWeight: 600,
+                  padding: "10px 16px",
+                  borderRadius: "6px",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease"
+                }}
                 onClick={() => onNav?.("catalogo")}
               >
-                Consultar Todo el Catalogo
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Consultar Todo el Catálogo
               </button>
             </div>
           </div>
