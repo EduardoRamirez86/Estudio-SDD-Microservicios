@@ -2276,118 +2276,134 @@ code, kbd, samp, pre {
   line-height: 1.25;
 }
 
+
 /* ==========================================================================
-   MODULO: LECTURA DIGITAL POR STREAMING & VISOR DOCUMENTAL TACTIL
-   Consola Fisica de Titanio Cepillado, Interruptor Basculante & Marco Biselado
+   MODULO: CATALOGO CON SEPARACION FORMATO DIGITAL VS. FISICO (MATTE CORPORATIVO)
    ========================================================================== */
 
-/* Fila y Botones de Accion en Ficha de Libro */
-.book-card__actions-stack {
+.book-card__formats {
+  padding: 0 var(--space-16) var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.book-format-row {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 14px;
 }
 
-.book-card__action-digital {
+.book-format-row--digital {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+}
+
+.book-format-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 8px 12px;
-  background: linear-gradient(135deg, #1f2735 0%, #151c27 50%, #0d121b 100%);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  border-radius: 6px;
-  color: #f1f5f9;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
+}
+
+.book-format-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.book-format-badge {
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-subtle);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.book-format-stock {
+  font-size: 0.68rem;
+  font-family: var(--font-family-mono);
+  font-weight: 500;
+}
+
+/* Boton Ghost Sobrio y Elegante: Leer en Linea (Zero-Neon) */
+.btn-read-online {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 12px;
+  background-color: transparent;
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 
-    0 3px 10px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.16),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.7);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
+  box-shadow: none;
   text-decoration: none;
 }
 
-.book-card__action-digital:hover {
-  border-color: rgba(56, 189, 248, 0.65);
-  background: linear-gradient(135deg, #283344 0%, #1b2331 50%, #111722 100%);
-  box-shadow: 
-    0 5px 15px rgba(0, 0, 0, 0.6),
-    0 0 14px rgba(56, 189, 248, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
+.btn-read-online:hover {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-border-focus);
+  color: var(--color-text-primary);
 }
 
-.book-card__action-digital:active {
+.btn-read-online:active {
+  background-color: var(--color-surface-subtle);
   transform: translateY(1px);
-  box-shadow: 
-    0 2px 5px rgba(0, 0, 0, 0.6),
-    inset 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-.digital-doc-icon {
-  color: #38bdf8;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.7));
-  flex-shrink: 0;
+/* Divisor sutil entre formatos dentro de la ficha */
+.book-card__divider {
+  height: 1px;
+  background-color: var(--color-border-subtle);
+  margin: 2px 0;
 }
 
-.digital-badge-glow {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  font-size: 0.62rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
-}
+/* ==========================================================================
+   VISOR DIGITAL DOCUMENTAL: ZERO-CLUTTER & CORPORATIVO MATE
+   ========================================================================== */
 
-/* Modal Overlay con Desenfoque de Lente */
-.visor-backdrop {
+.visor-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 6, 10, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(5, 7, 10, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  animation: visorFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 24px;
+  animation: visorFadeIn 0.2s ease-out;
 }
 
-@keyframes visorFadeIn {
-  from { opacity: 0; transform: scale(0.985); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Chasis de Consola Fisica en Titanio Cepillado */
-.visor-chassis {
+.visor-modal {
   width: 100%;
-  max-width: 1220px;
-  height: 92vh;
-  max-height: 940px;
-  background: linear-gradient(145deg, #1b212c 0%, #11151e 50%, #0a0d13 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  box-shadow: 
-    0 40px 90px -15px rgba(0, 0, 0, 0.95),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    inset 0 -3px 8px rgba(0, 0, 0, 0.9),
-    0 0 35px rgba(56, 189, 248, 0.08);
+  max-width: 1140px;
+  height: 90vh;
+  max-height: 920px;
+  background: #0f141c;
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-md);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85);
   display: flex;
   flex-direction: column;
-  position: relative;
   overflow: hidden;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
-.visor-chassis--fullscreen {
+.visor-modal--fullscreen {
   max-width: 100vw;
   max-height: 100vh;
   height: 100vh;
@@ -2395,318 +2411,102 @@ code, kbd, samp, pre {
   border: none;
 }
 
-/* Remaches de Esquina (Hardware Rivets) */
-.visor-chassis__rivet {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #64748b 0%, #293344 70%, #0f141d 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.9),
-    0 1px 1px rgba(255, 255, 255, 0.1);
-  z-index: 10;
-}
-.visor-chassis__rivet--tl { top: 10px; left: 10px; }
-.visor-chassis__rivet--tr { top: 10px; right: 10px; }
-.visor-chassis__rivet--bl { bottom: 10px; left: 10px; }
-.visor-chassis__rivet--br { bottom: 10px; right: 10px; }
-
-/* Panel Superior de Encabezado */
+/* Encabezado Limpio del Visor */
 .visor-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.25) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 20px;
+  background: var(--color-surface-base);
+  border-bottom: 1px solid var(--color-border-subtle);
   gap: 16px;
   flex-shrink: 0;
 }
 
-.visor-header__meta {
+.visor-header__info {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-.visor-header__led-strip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.visor-led-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 
-    0 0 8px #10b981,
-    inset 0 1px 1px rgba(255, 255, 255, 0.8);
-  animation: pulseVisorLed 1.8s infinite ease-in-out;
-}
-
-@keyframes pulseVisorLed {
-  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px #10b981; }
-  50% { opacity: 0.65; transform: scale(0.92); box-shadow: 0 0 3px #10b981; }
-}
-
-.visor-telemetry-tag {
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  font-weight: 700;
-  color: #38bdf8;
-  letter-spacing: 0.08em;
-}
-
-.visor-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #f8fafc;
-  margin: 3px 0 2px 0;
+.visor-header__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.visor-subline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.72rem;
-  color: #94a3b8;
+.visor-header__author {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.visor-author {
-  color: #cbd5e1;
-  font-weight: 500;
-}
-
-.visor-sep {
-  color: rgba(255, 255, 255, 0.15);
-}
-
-.visor-badge-dewey {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  color: #94a3b8;
-}
-
-.visor-isbn {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: #64748b;
-}
-
-.visor-header__actions {
+.visor-header__controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.visor-aux-btn {
+.visor-btn-ghost {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: linear-gradient(145deg, #222a38, #141923);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #cbd5e1;
+  background: transparent;
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 
-    0 2px 5px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: all 0.15s ease;
 }
 
-.visor-aux-btn:hover {
-  background: linear-gradient(145deg, #2c3647, #19202c);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #f1f5f9;
-  transform: translateY(-1px);
+.visor-btn-ghost:hover {
+  background: var(--color-surface-elevated);
+  border-color: var(--color-border-focus);
+  color: var(--color-text-primary);
 }
 
-.visor-aux-btn:active {
-  transform: translateY(1px);
-}
-
-/* Interruptor Basculante de Consola (Tactile Rocker Switch) */
-.visor-switch-housing {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 3px;
-}
-
-.visor-switch-label {
-  font-size: 0.58rem;
-  font-family: var(--font-mono);
-  color: #64748b;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-}
-
-.visor-switch-btn {
-  background: #090c11;
-  border: 1px solid #2d3748;
-  border-radius: 6px;
-  padding: 3px;
-  box-shadow: 
-    inset 0 2px 6px rgba(0, 0, 0, 0.9),
-    0 1px 1px rgba(255, 255, 255, 0.12);
-  cursor: pointer;
-  transition: transform 0.1s ease;
-  outline: none;
-}
-
-.visor-switch-btn:active {
-  transform: translateY(1px);
-}
-
-.visor-switch-toggle {
-  width: 66px;
-  height: 28px;
-  background: linear-gradient(180deg, #374151 0%, #1f2937 60%, #111827 100%);
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 6px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.visor-switch-btn--on .visor-switch-toggle {
-  background: linear-gradient(180deg, #1c2738 0%, #0e1625 100%);
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 
-    0 0 12px rgba(56, 189, 248, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35);
-}
-
-.visor-switch-btn--off .visor-switch-toggle {
-  background: linear-gradient(180deg, #381f23 0%, #201114 100%);
-  border-color: rgba(239, 68, 68, 0.45);
-  box-shadow: 
-    0 0 10px rgba(239, 68, 68, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
-}
-
-.visor-switch-rocker {
+.visor-btn-close {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.visor-switch-led {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ef4444;
-  box-shadow: 0 0 6px #ef4444;
-  transition: all 0.2s ease;
-}
-
-.visor-switch-btn--on .visor-switch-led {
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-}
-
-.visor-switch-text {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #e2e8f0;
-  letter-spacing: 0.06em;
-}
-
-/* Barra de Estado del Enlace HTTP */
-.visor-tunnel-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 20px;
-  background: #080c12;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: #94a3b8;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.visor-tunnel-bar__left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tunnel-icon {
-  color: #f59e0b;
-}
-
-.tunnel-endpoint {
-  color: #38bdf8;
+  padding: 6px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-sm);
+  color: #fca5a5;
+  font-size: 0.72rem;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.tunnel-pipe {
-  color: #64748b;
-  font-size: 0.64rem;
+.visor-btn-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ffffff;
 }
 
-.visor-tunnel-bar__right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.tunnel-stat {
-  color: #64748b;
-  font-size: 0.65rem;
-}
-
-.tunnel-stat strong {
-  color: #e2e8f0;
-}
-
-/* Marco Interior Recesado del Documento */
-.visor-screen-frame {
+.visor-body {
   flex: 1;
   position: relative;
-  background: #06080d;
-  box-shadow: 
-    inset 0 4px 16px rgba(0, 0, 0, 0.95),
-    0 1px 0 rgba(255, 255, 255, 0.04);
-  margin: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #090c10;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
-.visor-screen-iframe {
+.visor-iframe {
   width: 100%;
   height: 100%;
   border: none;
@@ -2714,87 +2514,34 @@ code, kbd, samp, pre {
   display: block;
 }
 
-/* Overlay de Carga con Radar */
-.visor-loading-overlay {
+.visor-loading {
   position: absolute;
   inset: 0;
-  background: rgba(6, 8, 13, 0.95);
+  background: #090c10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 5;
   gap: 12px;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
 }
 
-.visor-loading-spinner {
-  width: 38px;
-  height: 38px;
-  border: 3px solid rgba(56, 189, 248, 0.15);
-  border-top-color: #38bdf8;
+.visor-spinner {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--color-border-muted);
+  border-top-color: var(--color-text-secondary);
   border-radius: 50%;
-  animation: visorSpin 0.9s linear infinite;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  animation: visorSpin 0.8s linear infinite;
 }
 
 @keyframes visorSpin {
   to { transform: rotate(360deg); }
 }
 
-.visor-loading-text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #f1f5f9;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-
-.visor-loading-sub {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: #64748b;
-}
-
-/* Barra Inferior de Diagnostico */
-.visor-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 24px;
-  background: #080c12;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  color: #64748b;
-  flex-shrink: 0;
-}
-
-.visor-footer__left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.visor-audit-tag {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 2px 6px;
-  border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.visor-footer__right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #94a3b8;
-}
-
-.visor-kbd {
-  background: #1e2634;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: #e2e8f0;
-  font-size: 0.6rem;
-  font-weight: 700;
+@keyframes visorFadeIn {
+  from { opacity: 0; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
 }

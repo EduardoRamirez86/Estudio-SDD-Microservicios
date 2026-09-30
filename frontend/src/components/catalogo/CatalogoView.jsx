@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
+import { CatalogoCard } from "./CatalogoCard";
 import { VisorDigitalDocumental } from "./VisorDigitalDocumental";
 
 export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
@@ -66,88 +67,17 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
         </div>
       </div>
 
-      {/* Grid de Fichas Bibliográficas */}
+      {/* Grid de Fichas Bibliográficas con Separación Digital y Física */}
       <div className="book-grid">
-        {filtrados.map(libro => {
-          const pct = libro.stockTotal > 0 ? (libro.stockDisponible / libro.stockTotal) * 100 : 0;
-          const agotado = libro.stockDisponible <= 0;
-
-          return (
-            <article key={libro.id} className="book-card" aria-label={`Ficha: ${libro.titulo}`}>
-              <div className="book-card__top">
-                <span className="book-card__cat">
-                  {libro.categoriaId ? `DEWEY-CAT-${libro.categoriaId}` : "FONDO GENERAL"}
-                </span>
-                <span 
-                  className={`book-card__status-dot${agotado ? " book-card__status-dot--empty" : ""}`}
-                  title={agotado ? "Sin stock disponible" : "Ejemplares en inventario"}
-                  aria-hidden="true"
-                />
-              </div>
-
-              <div className="book-card__body">
-                <h3 className="book-card__title">{libro.titulo}</h3>
-                <p className="book-card__author">{libro.autorNombre || "Autor Institucional / Sin registrar"}</p>
-                <code className="book-card__isbn">ISBN {libro.isbn || "N/A"}</code>
-
-                <div className="book-card__stock-wrap">
-                  <div className="stock-meter" aria-hidden="true">
-                    <div 
-                      className={`stock-meter__fill${agotado ? " stock-meter__fill--empty" : ""}`} 
-                      style={{ width: `${pct}%` }} 
-                    />
-                  </div>
-                  <div className="book-card__stock-label">
-                    <span>Disponibilidad</span>
-                    <strong style={{ color: agotado ? "var(--color-status-danger)" : "var(--color-text-primary)" }}>
-                      {libro.stockDisponible} de {libro.stockTotal} ejemplares
-                    </strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fila de Acciones: Lectura Digital por Streaming y Préstamo Físico */}
-              <div className="book-card__actions-stack">
-                <button
-                  type="button"
-                  className="book-card__action-digital"
-                  onClick={() => setLibroDigital(libro)}
-                  id={`btn-digital-${libro.id}`}
-                  title="Abrir visor de lectura digital por streaming asíncrono"
-                >
-                  <svg className="digital-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <line x1="10" y1="9" x2="8" y2="9"/>
-                  </svg>
-                  <span>Visualizar Edición Digital</span>
-                  <span className="digital-badge-glow">STREAM</span>
-                </button>
-
-                <button
-                  className={`book-card__action${agotado ? " book-card__action--disabled" : ""}`}
-                  disabled={agotado}
-                  onClick={() => !agotado && openModal(libro)}
-                  id={`btn-solicitar-${libro.id}`}
-                >
-                  {agotado ? (
-                    <>
-                      <span aria-hidden="true">✕</span>
-                      Sin Ejemplares Físicos
-                    </>
-                  ) : (
-                    <>
-                      <span aria-hidden="true">✓</span>
-                      {esBibliotecario ? "Emitir Préstamo" : "Solicitar en Custodia"}
-                    </>
-                  )}
-                </button>
-              </div>
-            </article>
-          );
-        })}
+        {filtrados.map(libro => (
+          <CatalogoCard
+            key={libro.id}
+            libro={libro}
+            onLeerDigital={(lib) => setLibroDigital(lib)}
+            onSolicitarFisico={(lib) => openModal(lib)}
+            esBibliotecario={esBibliotecario}
+          />
+        ))}
 
         {filtrados.length === 0 && !loading && (
           <div className="empty-state" style={{ gridColumn: "1 / -1" }}>
@@ -157,13 +87,13 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
         )}
       </div>
 
-      {/* Modal de Solicitud de Préstamo (Paso 1: Captura de Datos) */}
+      {/* Modal de Solicitud de Préstamo Físico (Paso 1: Captura de Datos) */}
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)} role="dialog" aria-modal="true">
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div className="modal__header">
               <div>
-                <span className="modal__eyebrow">Trámite Institucional de Préstamo</span>
+                <span className="modal__eyebrow">Trámite Institucional de Préstamo Físico</span>
                 <h3 className="modal__title">{modal.titulo}</h3>
                 <p className="modal__sub">
                   Autor: {modal.autorNombre} — Disponibles en bodega: <strong>{modal.stockDisponible}</strong>
@@ -253,7 +183,7 @@ export function CatalogoView({ libros = [], onSolicitarPrestamo, loading }) {
         onCancel={() => setConfirmacionData(null)}
       />
 
-      {/* Modal de Consola Táctil: Visor Digital Documental por Streaming */}
+      {/* Visor Digital Documental (Zero-Clutter) */}
       {libroDigital && (
         <VisorDigitalDocumental
           libro={libroDigital}

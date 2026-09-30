@@ -112,8 +112,10 @@ export function AppShell() {
         <main className="app-shell__content">
           {renderView()}
         </main>
-        {/* Telemetría Docked al pie con Divulgación Progresiva */}
-        <TelemetryConsole logs={logs} onClear={() => setLogs([])} />
+        {/* Telemetría y Trazas Técnicas: Solo visibles para perfil Bibliotecario / Admin */}
+        {usuario?.rol === "bibliotecario" && (
+          <TelemetryConsole logs={logs} onClear={() => setLogs([])} />
+        )}
       </div>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
